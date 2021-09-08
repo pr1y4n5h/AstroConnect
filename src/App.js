@@ -10,6 +10,8 @@ import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
 import Home from "./Pages/Home/Home";
 import { setToken, setUser } from "./Redux/userSlice";
+import PostDetails from "./Pages/Post/PostDetails";
+import People from "./Pages/People/People";
 
 function App() {
 
@@ -23,7 +25,7 @@ function App() {
   //   dispatch(setUser(JSON.parse(localStorage?.getItem("user"))))
   // }, [])
 
-  // console.log("Main", token)
+  console.log("Main", userInfo)
   
   return (
     <div>
@@ -32,6 +34,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<Signup />} />
         <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/post/:postId" element={<PostDetails />} />
+        <Route path="/explore" element={<People />} />
       </Routes>
       <ToastContainer theme="colored" />
     </div>

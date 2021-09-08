@@ -4,28 +4,28 @@ import "./Feed.style.css";
 import { CircularProgress } from "@material-ui/core";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
 import { fetchTimeline } from "../../Redux/postSlice";
+import { fetchCurrentUserPosts } from "../../Redux/userSlice";
 
-const Feed = () => {
-  const { userInfo } = useSelector((state) => state.user);
-  const { posts, error, pending } = useSelector((state) => state.post);
-  const navigate = useNavigate();
+const Feed = ({userID}) => {
+  const { userInfo, userPosts } = useSelector((state) => state.user);
+  const { posts, pending } = useSelector((state) => state.post);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!pending) {
-      dispatch(fetchTimeline(userInfo));
+      userID ? dispatch(fetchCurrentUserPosts(userID)) : dispatch(fetchTimeline(userInfo));
     }
-  }, []);
+  }, [userInfo._id]);
 
   return (
     <div className="feed-container">
       <div className="feed-wrapper">
-        <Share />
+        <Share user={userID} />
         { pending ? (
           <div className="flex justify-center items-center h-80"> <CircularProgress color="secondary" /> </div>
         ) : (
+          userID ? userPosts?.map((item) => <Post key={item._id} post={item} />) : 
           posts?.map((item) => <Post key={item._id} post={item} />)
         )}
       </div>

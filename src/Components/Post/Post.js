@@ -5,48 +5,76 @@ import "./Post.style.css";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { addToLikes, removeFromLikes } from "../../Redux/postSlice";
+import { UseGetIndividualUser } from "../../Hooks/useGetIndividualUser";
 
 const Post = ({ post }) => {
   const { desc, likes } = post;
+  const user = UseGetIndividualUser(post.userId)
 
-  const [user, setUser] = useState({});
+  const {
+    userInfo: authUser,
+    error,
+    token,
+  } = useSelector((state) => state.user);
 
-  const {userInfo: authUser , error, token} = useSelector(state => state.user)
   const dispatch = useDispatch();
-
-  async function fetchPost() {
-    try {
-      const { data, status } = await axios.get(
-        `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${post.userId}`
-      );
-
-      if (status === 200) {
-        setUser(data);
-        console.log(user);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  useEffect(() => {
-    fetchPost();
-  }, [post.userId]);
+  
+  const isLiked = () => post?.likes?.includes(authUser._id);
 
   const likeHandler = async () => {
     try {
-      const {data,status} = await axios.post(`https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${post._id}/like`, {
-        userId: authUser._id
-      })
+      if (isLiked()) {
+        const { status } = await axios.post(
+          `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${post._id}/like`,
+          {
+            userId: authUser._id,
+            type: "REMOVE",
+          }
+        );
 
-      if(status===200){
-        alert("Post Liked")
+        if (status === 200) {
+          console.log("Hey there");
+          dispatch(removeFromLikes(post.id, authUser._id))
+        }
+
+      } else {
+        const { status } = await axios.post(
+          `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${post._id}/like`,
+          {
+            userId: authUser._id,
+            type: "ADD",
+          }
+        );
+
+        if (status === 200) {
+          console.log("Hey there");
+          dispatch(addToLikes(post._id, authUser._id));
+        }
       }
-    }
-    catch(error){
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
+
+  // const likeHandler = async () => {
+  //   try {
+  //     const { data, status } = await axios.post(
+  //       `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${post._id}/like`,
+  //       {
+  //         userId: authUser._id,
+  //         type: "ADD",
+  //       }
+  //     );
+
+  //     if (status === 200) {
+  //       console.log("Hey there");
+  //       dispatch(addToLikes(post._id));
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className="post-container">
@@ -57,17 +85,16 @@ const Post = ({ post }) => {
               <span>{user?.username?.charAt().toUpperCase()}</span>
             </div>
             <Link to={`/profile/${post.userId}`}>
-              <span className="font-semibold font-sans"> {user.username} </span>
+              <span className="font-semibold font-sans">{user?.username}</span>
             </Link>
             <span className="text-xs ml-3"> {format(post.createdAt)}</span>
           </div>
-          <div className="post-top-right">
-            <MoreVert />
-          </div>
         </div>
+        <Link to={`/post/${post._id}`}>
         <div className="mt-4 ml-2">
           <div> {desc} </div>
         </div>
+        </Link>
         <div className="flex justify-between items-center mt-4">
           <div>
             <Favorite
@@ -77,7 +104,6 @@ const Post = ({ post }) => {
             />
             <span className="text-sm"> {likes.length} people liked this</span>
           </div>
-          <div className="text-sm">9 comments</div>
         </div>
       </div>
     </div>

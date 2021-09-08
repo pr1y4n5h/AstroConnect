@@ -8,14 +8,13 @@ import {
 import "./Share.style.css";
 import { Button } from "@material-ui/core";
 import { useState } from "react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { newPost } from "../../Redux/postSlice";
 
-const Share = () => {
+const Share = ({user}) => {
 
-  const {userInfo: user} = useSelector(state => state.user);
+  const {userInfo: authUser} = useSelector(state => state.user);
   const {posts , error, pending} = useSelector(state => state.post)
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,11 +22,9 @@ const Share = () => {
   const [text, setText] = useState("");
   const [file, setFile] = useState(null);
 
-
-
   const submitHandle = async (e) => {
     e.preventDefault();
-    dispatch(newPost({userId: user._id, desc: text}))
+    dispatch(newPost({userId: authUser._id, desc: text}))
     setText("")
     
     // if (file) {
@@ -49,7 +46,7 @@ const Share = () => {
 
   return (
     <div className="share-container">
-      <div className="p-6">
+      {!user && <div className="p-6">
         <div className="share-top">
           <input
             placeholder="What is in your mind? ;)"
@@ -114,7 +111,7 @@ const Share = () => {
             Post
           </Button>
         </form>
-      </div>
+      </div>}
     </div>
   );
 };

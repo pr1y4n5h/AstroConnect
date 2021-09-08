@@ -33,19 +33,9 @@ const Navbar = () => {
         </span>
         </Link>
       </div>
- 
-      <div className="navbar-center">
-        <div className="navbar-search">
-          <Search className="ml-3 mr-2" />
-          <input
-            className="search-input"
-            placeholder="Search for friend or Posts"
-          />
-        </div>
-      </div>
 
       <div className="navbar-right">
-        <ul className="nav-links">
+        <ul className="flex mr-10">
           <li className="ml-6">Hi {userInfo?.username}! </li>
           <li className="ml-6">Home</li>
         </ul>

@@ -4,25 +4,49 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { Add, Remove } from "@material-ui/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { followUser, unfollowUser } from "../../Redux/userSlice";
 
 const Rightbar = ({ user }) => {
+  
   const [following, setFollowing] = useState([]);
   const [isFollowed, setFollowed] = useState(false);
-  const {userInfo: authUser , error, token} = useSelector(state => state.user)
+  const { userInfo: authUser, token } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  
   const handleFollow = async () => {
     try {
+      if (isFollowed) {
+        await axios.post(
+          `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${user._id}/unfollow`,
+          {
+            userId: authUser._id,
+          }
+        );
+        dispatch(unfollowUser(user._id));
+        // setFollowing((following) =>
+        //   following.filter((item) => item !== authUser._id)
+        // );
+      } else {
+        await axios.post(
+          `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${user._id}/follow`,
+          {
+            userId: authUser._id,
+          }
+        );
+        dispatch(followUser(user._id));
+        // setFollowing((following) => [...following, authUser._id]);
+      }
+      setFollowed((isFollowed) => !isFollowed);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
-    setFollowed(authUser.followings.includes(user?._id))
-  }, [authUser, user])
-
+    setFollowed(authUser?.followings?.includes(user?._id));
+    console.log(user);
+  }, [authUser, user]);
 
   async function fetchFollowing() {
     try {
@@ -38,20 +62,27 @@ const Rightbar = ({ user }) => {
     }
   }
 
+  console.log(isFollowed);
+
   useEffect(() => {
     fetchFollowing();
   }, [user]);
 
-
-
   const ProfileRightBar = () => {
-
     return (
       <>
-      {user._id !== authUser._id && (
-        <Button variant="contained" color="primary"  onClick={handleFollow}> { isFollowed ? "Unfollow" : "Follow"} {isFollowed ? <Remove className="ml-1" /> : <Add className="ml-1" /> } </Button>
-
-      ) }
+        {user._id !== authUser._id && (
+          <div className="mb-8">
+          <Button variant="contained" color="primary" onClick={handleFollow}>
+            {isFollowed ? "Unfollow" : "Follow"}
+            {isFollowed ? (
+              <Remove className="ml-1" />
+            ) : (
+              <Add className="ml-1" />
+            )}
+          </Button>
+          </div>
+        )}
         <h3 className="text-lg font-bold font-sans mb-4"> User Details </h3>
         <div className="mb-8">
           <div className="mb-4">
@@ -94,7 +125,7 @@ const Rightbar = ({ user }) => {
   };
 
   const HomeRightBar = () => {
-    return <>This is a simple rightbar</>;
+    return <> This is a simple rightbar</>;
   };
 
   return (

@@ -7,7 +7,7 @@ import Sidebar from "../../Components/Sidebar/Sidebar";
 const Home = () => {
   return (
     <>
-      <Navbar />
+      <Navbar /> 
       <div className="flex w-full">
         <Sidebar />
         <Feed />

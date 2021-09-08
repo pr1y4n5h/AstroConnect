@@ -7,14 +7,17 @@ import { useParams } from "react-router";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useScrollToTop } from "../../Hooks/UseScrollToTop";
+import { useDispatch, useSelector } from "react-redux";
 
 const Profile = () => {
   const [user, setUser] = useState([]);
   const {id} = useParams();
 
+  const dispatch = useDispatch();
+
   useScrollToTop()
 
-   async function fetchFeed() {
+   async function getUser() {
     try {
       const { data, status } = await axios.get(
         `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${id}`
@@ -30,7 +33,7 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    fetchFeed()
+    getUser()
   }, [id]);
 
   return (
@@ -42,7 +45,7 @@ const Profile = () => {
           <div className="profile-top">
             <div className="profile-cover">
               <img
-                src="assets/img4.jpg"
+                src="https://cdn.pixabay.com/photo/2016/10/20/18/35/earth-1756274_960_720.jpg"
                 style={{ width: "100%", height: "250px", objectFit: "cover" }}
               />
               <div className="profile-pic">
@@ -51,16 +54,16 @@ const Profile = () => {
             </div>
 
             <div className="profile-info">
-              <h4 className="text-xl font-extrabold font-sans">{(user?.username)?.charAt(0)?.toUpperCase() + (user?.username)?.slice(1)}</h4>
+              <h4 className="text-xl font-extrabold font-sans">{user?.username}</h4>
               <span className="text-lg font-light font-sans"> {user?.bio} </span>
             </div>
           </div>
           <div className="profile-bottom">
-            <Feed user={id} />
+            <Feed userID={id} />
             <Rightbar user={user}/>
           </div>
         </div>
-      </div>
+      </div>e
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { MoreVert, Favorite } from "@material-ui/icons";
+import { Favorite, FavoriteBorder } from "@material-ui/icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "./Post.style.css";
@@ -10,14 +10,8 @@ import { UseGetIndividualUser } from "../../Hooks/useGetIndividualUser";
 
 const Post = ({ post }) => {
   const { desc, likes } = post;
-  const user = UseGetIndividualUser(post.userId)
-
-  const {
-    userInfo: authUser,
-    error,
-    token,
-  } = useSelector((state) => state.user);
-
+  const user = UseGetIndividualUser(post.userId);
+  const { userInfo: authUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   
   const isLiked = () => post?.likes?.includes(authUser._id);
@@ -32,12 +26,9 @@ const Post = ({ post }) => {
             type: "REMOVE",
           }
         );
-
         if (status === 200) {
-          console.log("Hey there");
-          dispatch(removeFromLikes(post.id, authUser._id))
+          dispatch(removeFromLikes({postId: post._id, userId: authUser._id}));
         }
-
       } else {
         const { status } = await axios.post(
           `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${post._id}/like`,
@@ -46,35 +37,14 @@ const Post = ({ post }) => {
             type: "ADD",
           }
         );
-
         if (status === 200) {
-          console.log("Hey there");
-          dispatch(addToLikes(post._id, authUser._id));
+          dispatch(addToLikes({postId: post._id, userId: authUser._id}));
         }
       }
     } catch (error) {
       console.log(error);
     }
   };
-
-  // const likeHandler = async () => {
-  //   try {
-  //     const { data, status } = await axios.post(
-  //       `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${post._id}/like`,
-  //       {
-  //         userId: authUser._id,
-  //         type: "ADD",
-  //       }
-  //     );
-
-  //     if (status === 200) {
-  //       console.log("Hey there");
-  //       dispatch(addToLikes(post._id));
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   return (
     <div className="post-container">
@@ -91,18 +61,18 @@ const Post = ({ post }) => {
           </div>
         </div>
         <Link to={`/post/${post._id}`}>
-        <div className="mt-4 ml-2">
-          <div> {desc} </div>
-        </div>
+          <div className="mt-4 ml-2">
+            <div> {desc} </div>
+          </div>
         </Link>
         <div className="flex justify-between items-center mt-4">
           <div>
-            <Favorite
-              fontSize="small"
+          <span onClick={likeHandler}>
+            { isLiked() ? <Favorite
               className="text-red-500 cursor-pointer"
-              onClick={likeHandler}
-            />
-            <span className="text-sm"> {likes.length} people liked this</span>
+            /> : <FavoriteBorder className="text-red-500 cursor-pointer" />  }
+            </span>
+            <span className="text-sm"> {likes.length < 1 && "Be the first one to Like this post"} {isLiked() && likes.length === 1 && "You Liked this post!"} {likes.length > 1 && isLiked() &&  `You and ${likes.length - 1} others liked this Post!` } {!isLiked() && likes.length !== 0 && `${likes.length} people liked this Post`}  </span>
           </div>
         </div>
       </div>

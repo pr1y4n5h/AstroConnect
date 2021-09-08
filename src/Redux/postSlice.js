@@ -1,29 +1,53 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const fetchTimeline = createAsyncThunk("post/timeline", async (authUser) => {
+export const fetchTimeline = createAsyncThunk(
+  "post/timeline",
+  async (authUser) => {
+    const { data } = await axios.get(
+      `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/timeline/${authUser._id}`
+    );
 
-  const {data} = await axios.get(`https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/timeline/${authUser._id}`);
-
-  return data;
-});
-
-export const getCurrentPost = createAsyncThunk("post/currentpost", async (postID) => {
-
-  const {data} = await axios.get(`https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postID}`);
-
-  return data;
-});
- 
-export const newPost = createAsyncThunk("post/newPost", async ({userId, desc}) => {
-
-  const {data} = await axios.post("https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/", {
-    userId, desc
+    return data;
   }
-  );
+);
 
-  return data;
-});
+export const fetchCurrentUserPosts = createAsyncThunk(
+  "post/currentUserposts",
+  async (userID) => {
+    const { data } = await axios.get(
+      `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/profile/${userID}`
+    );
+
+    return data;
+  }
+);
+
+
+export const getCurrentPost = createAsyncThunk(
+  "post/currentpost",
+  async (postID) => {
+    const { data } = await axios.get(
+      `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postID}`
+    );
+
+    return data;
+  }
+);
+
+export const newPost = createAsyncThunk(
+  "post/newPost",
+  async ({ userId, desc }) => {
+    const { data } = await axios.post(
+      "https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/",
+      {
+        userId,
+        desc,
+      }
+    );
+    return data;
+  }
+);
 
 export const postSlice = createSlice({
   name: "post",
@@ -36,29 +60,43 @@ export const postSlice = createSlice({
   },
 
   reducers: {
-
-    flushPosts: (state ) => {
+    flushPosts: (state) => {
       state.posts = "";
     },
 
-    addToLikes: (state, {postID, userID}) => {
-      const postIndex = state.posts.findIndex(item => item._id === postID);
-      return state.posts[postIndex].likes.concat(userID);
+    addToLikes: (state, action) => {
+      const posts = state.posts.map((item) =>
+        item._id === action.payload.postId
+          ? { ...item, likes: [...item.likes, action.payload.userId] }
+          : item
+      );
+      return { ...state, posts };
     },
 
-    removeFromLikes: (state, {postID, userID}) => {
-      const postIndex = state.posts.findIndex(item => item._id === postID);
-      return state.posts[postIndex].likes.pop();
+    removeFromLikes: (state, action) => {
+      const posts = state.posts.map((post) =>
+        post._id === action.payload.postId
+          ? {
+              ...post,
+              likes: post.likes.filter(
+                (userId) => userId !== action.payload.userId
+              ),
+            }
+          : post
+      );  
+      return { ...state, posts };
     },
 
     updateCurrentPost: (state, action) => {
-      state.currentPost = {...state, desc: action.payload}
+      state.currentPost = { ...state, desc: action.payload };
     },
 
+
+
     setLoader: (state) => {
-      state.loader = !state.loader
-    }
+      state.loader = !state.loader;
     },
+  },
 
   extraReducers: {
     [fetchTimeline.pending]: (state) => {
@@ -68,13 +106,25 @@ export const postSlice = createSlice({
     [fetchTimeline.fulfilled]: (state, action) => {
       state.pending = false;
       state.error = false;
-      state.posts = action.payload.sort((a,b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt)
+      state.posts = action.payload.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
       });
     },
     [fetchTimeline.rejected]: (state) => {
       state.pending = null;
       state.error = true;
+    },
+
+    [fetchCurrentUserPosts.pending]: (state) => {
+      state.pending = true;
+      state.error = false;
+    },
+    [fetchCurrentUserPosts.fulfilled]: (state, action) => {
+      state.pending = false;
+      state.error = false;
+      state.posts = action.payload.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
     },
 
     [getCurrentPost.pending]: (state) => {
@@ -86,12 +136,6 @@ export const postSlice = createSlice({
       state.error = false;
       state.currentPost = action.payload;
     },
-
-    [getCurrentPost.rejected]: (state) => {
-      state.pending = null;
-      state.error = true;
-    },
-
 
 
     [newPost.pending]: (state) => {
@@ -106,5 +150,13 @@ export const postSlice = createSlice({
   },
 });
 
-export const { flushPosts, sharePost, addToLikes, removeFromLikes, updatePosts, updateCurrentPost, setLoader} = postSlice.actions;
+export const {
+  flushPosts,
+  sharePost,
+  addToLikes,
+  removeFromLikes,
+  updatePosts,
+  updateCurrentPost,
+  setLoader,
+} = postSlice.actions;
 export default postSlice.reducer;

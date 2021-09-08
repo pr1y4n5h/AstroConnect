@@ -126,7 +126,7 @@ const PostDetails = () => {
                 </div>
               </div>
 
-              <div className={`mt-4 ${!isEdit && "hidden"}`}>
+              <div className={`mt-4 ${!isEdit && "hidden" }`}>
                 <Edit
                   onClick={handleClickOpen}
                   className="mr-3 cursor-pointer"

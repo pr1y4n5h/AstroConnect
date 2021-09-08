@@ -11,12 +11,6 @@ export const loginUser = createAsyncThunk("user/login", async (user) => {
   return res.data;
 });
 
-export const fetchCurrentUserPosts = createAsyncThunk("user/userposts", async (userID) => {
-
-  const {data} = await axios.get(`https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/profile/${userID}`);
-
-  return data;
-});
 
 
 export const userSlice = createSlice({
@@ -33,8 +27,7 @@ export const userSlice = createSlice({
     },
 
     // userInfo: {},
-    userPosts: [],
-    individualUser: {},
+    // userPosts: [],
     token: null,
     pending: null,
     error: null,
@@ -91,17 +84,7 @@ export const userSlice = createSlice({
       state.error = true;
     },
 
-    [fetchCurrentUserPosts.pending]: (state) => {
-      state.pending = true;
-      state.error = false;
-    },
-    [fetchCurrentUserPosts.fulfilled]: (state, action) => {
-      state.pending = false;
-      state.error = false;
-      state.userPosts = action.payload.sort((a,b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt)
-      });
-    },
+
   },
 });
 

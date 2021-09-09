@@ -125,7 +125,7 @@ const Rightbar = ({ user }) => {
   };
 
   const HomeRightBar = () => {
-    return <> This is a simple rightbar</>;
+    return <></>;
   };
 
   return (

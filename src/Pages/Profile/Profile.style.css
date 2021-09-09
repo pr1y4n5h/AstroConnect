@@ -45,3 +45,10 @@
     align-items: center;
     justify-content:center
 }
+
+@media screen and (max-width: 768px) {
+  .profile-bottom{
+    display: flex;
+    flex-wrap: wrap-reverse;
+  }
+}

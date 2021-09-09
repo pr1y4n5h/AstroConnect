@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export function UseGetIndividualUser(userID, postID) {
+export function useGetAuthor(userID, postID) {
   const [user, setUser] = useState();
 
   async function getIndividualUser() {

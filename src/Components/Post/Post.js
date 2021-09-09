@@ -6,14 +6,17 @@ import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToLikes, removeFromLikes } from "../../Redux/postSlice";
-import { UseGetIndividualUser } from "../../Hooks/useGetIndividualUser";
+import { useGetAuthor } from "../../Hooks/useGetAuthor";
 
 const Post = ({ post }) => {
   const { desc, likes } = post;
-  const user = UseGetIndividualUser(post.userId);
+
+  const user = useGetAuthor(post?.userId, post._id);
+
   const { userInfo: authUser } = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
-  
+
   const isLiked = () => post?.likes?.includes(authUser._id);
 
   const likeHandler = async () => {

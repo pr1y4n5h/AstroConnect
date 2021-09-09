@@ -1,12 +1,11 @@
 import {
   PermMedia,
   EmojiEmotions,
-  Label,
   Room,
   Cancel,
 } from "@material-ui/icons";
 import "./Share.style.css";
-import { Button } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -48,12 +47,14 @@ const Share = ({user}) => {
     <div className="share-container">
       {!user && <div className="p-6">
         <div className="share-top">
-          <input
-            placeholder="What is in your mind? ;)"
-            className="share-input"
+          <TextField
+            label="What's in your mind?"
+            multiline
+            className="w-full"
             value={text}
             onChange={(evt) => setText(evt.target.value)}
           />
+
           <hr className="mt-6" />
         </div>
         {file && (
@@ -86,11 +87,6 @@ const Share = ({user}) => {
                 onChange={(e) => setFile(e.target.files[0])}
               />
             </label>
-
-            <div className="share-option">
-              <Label className="mr-1" />
-              <span className="font-medium text-xs"> Tag </span>
-            </div>
 
             <div className="share-option">
               <Room className="mr-1" />

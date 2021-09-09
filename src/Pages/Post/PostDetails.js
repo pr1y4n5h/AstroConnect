@@ -6,15 +6,13 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import {
-  getCurrentPost,
-  updateCurrentPost,
   updatePosts,
 } from "../../Redux/postSlice";
 import Navbar from "../../Components/Navbar/Navbar";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import Rightbar from "../../Components/Rightbar/Rightbar";
-import { UseGetIndividualUser } from "../../Hooks/useGetIndividualUser";
-import { Edit, Delete, Favourite, AccessTimeSharp } from "@material-ui/icons";
+import { useGetAuthor } from "../../Hooks/useGetAuthor";
+import { Edit, Delete, Favourite, AccessTimeSharp, Favorite, FavoriteBorder } from "@material-ui/icons";
 import moment from "moment";
 import DeletePost from "../../Components/Post/DeletePost";
 import React from "react";
@@ -27,7 +25,6 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 const PostDetails = () => {
-  const { currentPost, posts, isEditable } = useSelector((state) => state.post);
   const { userInfo: authUser } = useSelector((state) => state.user);
   const { postId } = useParams();
   const dispatch = useDispatch();
@@ -35,8 +32,9 @@ const PostDetails = () => {
 
   const [isEdit, setEdit] = useState(false);
 
-  const [post, setPost] = useState();
-  const [postText, setPostText] = useState(post?.desc);
+  const [currentPost, setCurrentPost] = useState({});
+
+  const [postText, setPostText] = useState("");
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -47,22 +45,15 @@ const PostDetails = () => {
     setOpen(false);
   };
 
-  const currentUser = UseGetIndividualUser(post?.userId, postId);
+  const currentUser = useGetAuthor(currentPost?.userId, postId);
 
-  useEffect(() => {
-    if(post?.userId === authUser._id) {
-      setEdit(true)
-    }
-  })
-
-
-  async function fetchThisPost(postID) {
+  async function fetchCurrentPost(postID) {
 
     try {
       const {data, status} = await axios.get(`https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postID}`);
 
       if(status === 200){
-        setPost(data)
+        setCurrentPost(data);
       }
     }
     catch(error) {
@@ -70,12 +61,16 @@ const PostDetails = () => {
     }
   }
 
-
   useEffect(() => {
     // dispatch(getCurrentPost(postId));
-
-    fetchThisPost(postId)
+    fetchCurrentPost(postId)
+    
   }, [postId]);
+
+  useEffect(() => {
+    setPostText(currentPost?.desc)
+  },[currentPost?.desc])
+
 
   const updatePostHandler = async () => {
     try {
@@ -91,14 +86,56 @@ const PostDetails = () => {
 
         // dispatch(updateCurrentPost(postText));
         
-        setPost(postText)
+        // setPost(postText)
+        
+        setCurrentPost( {...currentPost, desc: postText} ); 
         setOpen(false);
-
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+
+  useEffect(() => {
+    if(currentPost?.userId === authUser._id) {
+      setEdit(true)
+    }
+  })
+
+  const isLiked = () => currentPost?.likes?.includes(authUser._id);
+
+  async function likeHandler() {
+      try {
+        if (isLiked()) {
+          const { status } = await axios.post(
+            `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postId}/like`,
+            {
+              userId: authUser._id,
+              type: "REMOVE",
+            }
+          );
+          if (status === 200) {
+            setCurrentPost( {...currentPost, likes: currentPost.likes.filter(item => item !== authUser._id)});
+          }
+        } else {
+          const { status } = await axios.post(
+            `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postId}/like`,
+            {
+              userId: authUser._id,
+              type: "ADD",
+            }
+          );
+          if (status === 200) {
+            setCurrentPost( {...currentPost, likes: [...currentPost.likes, authUser._id]});
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const {likes} = currentPost
 
   return (
     <>
@@ -171,7 +208,18 @@ const PostDetails = () => {
             {/* body */}
 
             <div className="px-4 py-4">
-              <p> {post?.desc} </p>
+              <p> {currentPost?.desc} </p>
+
+              <div className="my-6">
+
+              <span onClick={likeHandler}>
+            { isLiked() ? <Favorite
+              className="text-red-500 cursor-pointer"
+            /> : <FavoriteBorder className="text-red-500 cursor-pointer" />  }
+            </span>
+            <span className="text-sm"> {likes?.length < 1 && "Be the first one to Like this post"} {isLiked() && likes?.length === 1 && "You Liked this post!"} {likes?.length > 1 && isLiked() &&  `You and ${likes?.length - 1} others liked this Post!` } {!isLiked() && likes?.length !== 0 && `${likes?.length} people liked this Post`}  </span>
+              </div>
+
             </div>
           </div>
         </div>

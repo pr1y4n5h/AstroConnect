@@ -24,9 +24,8 @@ const Login = () => {
     dispatch(loginUser(credentials));
   }
 
-  if(pending === false) {
+  if(error === false && pending === false) {
     navigate("/")
-    toastSuccessText("Login successful!")
   }
 
   return (

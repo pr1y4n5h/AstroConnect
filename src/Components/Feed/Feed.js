@@ -19,13 +19,15 @@ const Feed = ({userID}) => {
 
   return (
     <div className="feed-container">
-      <div className="feed-wrapper">
+      <div className="w-full">
         <Share user={userID} />
         { pending ? (
           <div className="flex justify-center items-center h-80"> <CircularProgress color="secondary" /> </div>
         ) : (
+
+          posts.length > 0 ? (
           userID ? posts?.map((item) => <Post key={item._id} post={item} />) : 
-          posts?.map((item) => <Post key={item._id} post={item} />)
+          posts?.map((item) => <Post key={item._id} post={item} />)) : <div className="h-80 flex items-center justify-center w-full"> <h2 className="text-center"> Nothing to show here... </h2> </div>
         )}
       </div>
     </div>

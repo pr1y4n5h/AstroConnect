@@ -73,7 +73,7 @@ const Share = ({user}) => {
         <form
           className="share-bottom"
           onSubmit={submitHandle}
-          enctype="multipart/form-data"
+          encType="multipart/form-data"
         >
           <div className="flex justify-between">
             <label htmlFor="file" className="share-option">

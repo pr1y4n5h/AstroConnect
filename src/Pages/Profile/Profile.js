@@ -10,31 +10,16 @@ import { useScrollToTop } from "../../Hooks/UseScrollToTop";
 import { useDispatch, useSelector } from "react-redux";
 
 const Profile = () => {
-  const [user, setUser] = useState([]);
-  const {id} = useParams();
+  
+  const {profileId} = useParams();
+
+  const {allUsers} = useSelector(state => state.user)
 
   const dispatch = useDispatch();
 
+  const profileOwner = allUsers.find(item => item._id === profileId)
+
   useScrollToTop()
-
-   async function getUser() {
-    try {
-      const { data, status } = await axios.get(
-        `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${id}`
-      );
-
-      if (status === 200) {
-        setUser(data)
-        console.log(data)
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  useEffect(() => {
-    getUser()
-  }, [id]);
 
   return (
     <>
@@ -49,18 +34,18 @@ const Profile = () => {
                 style={{ width: "100%", height: "250px", objectFit: "cover" }}
               />
               <div className="profile-pic">
-                <span>{user?.username?.charAt(0)?.toUpperCase()}</span>
+                <span>{profileOwner?.username.charAt(0).toUpperCase()}</span>
               </div>
             </div>
 
             <div className="profile-info">
-              <h4 className="text-xl font-extrabold font-sans">{user?.username}</h4>
-              <span className="text-lg font-light font-sans"> {user?.bio} </span>
+              <h4 className="text-xl font-extrabold font-sans">{profileOwner?.username}</h4>
+              <span className="text-lg font-light font-sans"> {profileOwner?.bio} </span>
             </div>
           </div>
           <div className="profile-bottom">
-            <Feed userID={id} />
-            <Rightbar user={user}/>
+            <Feed userID={profileId} />
+            <Rightbar user={profileOwner}/>
           </div>
         </div>
       </div>e

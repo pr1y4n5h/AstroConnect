@@ -71,6 +71,10 @@ const PostDetails = () => {
     setPostText(currentPost?.desc)
   },[currentPost?.desc])
 
+  const processJoinedDate = (ISOString) => {
+    const currentDate = new Date(ISOString).toUTCString().substring(5, 16);
+    return currentDate;
+  };
 
   const updatePostHandler = async () => {
     try {
@@ -96,12 +100,13 @@ const PostDetails = () => {
     }
   };
 
-
   useEffect(() => {
     if(currentPost?.userId === authUser._id) {
       setEdit(true)
     }
-  })
+  },[postId])
+
+  console.log(currentPost?.userId)
 
   const isLiked = () => currentPost?.likes?.includes(authUser._id);
 
@@ -158,7 +163,7 @@ const PostDetails = () => {
                     {currentUser?.username}
                   </div>
                   <div className="text-gray-600	text-sm">
-                    <AccessTimeSharp fontSize="small" /> 23 Sept, 2023, 6:40PM
+                    <AccessTimeSharp fontSize="small" /> {processJoinedDate(currentPost?.createdAt)}
                   </div>
                 </div>
               </div>

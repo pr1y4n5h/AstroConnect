@@ -5,7 +5,7 @@ import { Button } from "@material-ui/core";
 import {Link} from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { resetToken, resetUser } from "../../Redux/userSlice";
+import { logOutUser} from "../../Redux/userSlice";
 import { toastFailText } from "../Toast";
 
  
@@ -16,12 +16,9 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   const logOutHandler = () => {
-    if(token) {
-      dispatch(resetToken())
-      dispatch(resetUser())
+      dispatch(logOutUser())
       toastFailText("You are Logged Out!");
-      navigate("/login")
-    } 
+      navigate("/login") 
   }
 
   return (

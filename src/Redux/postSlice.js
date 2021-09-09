@@ -85,16 +85,13 @@ export const postSlice = createSlice({
           : post
       );
 
-      
-
+    
       return { ...state, posts };
     },
 
     updateCurrentPost: (state, action) => {
       state.currentPost = { ...state, desc: action.payload };
     },
-
-
 
     setLoader: (state) => {
       state.loader = !state.loader;

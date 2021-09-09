@@ -20,7 +20,7 @@ export function useGetAuthor(userID, postID) {
 
   useEffect(() => {
     getIndividualUser();
-  }, [userID, postID]);
+  }, []);
 
   return user;
 }

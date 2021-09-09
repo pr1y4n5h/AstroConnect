@@ -11,9 +11,13 @@ import { useGetAuthor } from "../../Hooks/useGetAuthor";
 const Post = ({ post }) => {
   const { desc, likes } = post;
 
-  const user = useGetAuthor(post?.userId, post._id);
+  const user = useGetAuthor(post?.userId)
 
-  const { userInfo: authUser } = useSelector((state) => state.user);
+  const { userInfo: authUser, allUsers } = useSelector((state) => state.user);
+
+  // const findOwner = allUsers.find(item => item._id === post.userID)
+
+  // console.log("findOwner", findOwner)
 
   const dispatch = useDispatch();
 

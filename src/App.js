@@ -9,23 +9,30 @@ import Profile from "./Pages/Profile/Profile";
 import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
 import Home from "./Pages/Home/Home";
-import { setToken, setUser } from "./Redux/userSlice";
+import { fetchAllUsers, setToken, setUser } from "./Redux/userSlice";
 import PostDetails from "./Pages/Post/PostDetails";
 import People from "./Pages/People/People";
+import { PrivateRoute } from "./PrivateRoute";
 
 function App() {
 
   const dispatch = useDispatch();
-  const { userInfo, pending, error, token } = useSelector(
+  const { userInfo, allUsers, token } = useSelector(
     (state) => state.user
   );
 
-  // useEffect(() => {
-  //   dispatch(setToken(JSON.parse(localStorage?.getItem("token"))))
-  //   dispatch(setUser(JSON.parse(localStorage?.getItem("user"))))
-  // }, [])
+  useEffect(() => {
+    dispatch(setToken(JSON.parse(localStorage?.getItem("token"))))
+    dispatch(setUser(JSON.parse(localStorage?.getItem("user"))));
+  }, [token])
 
-  console.log("Main", userInfo)
+  useEffect(() => {
+    token && dispatch(fetchAllUsers(userInfo?._id))
+  }, [token])
+
+  // console.log("Main", allUsers)
+  // console.log("Main User", userInfo)
+  // console.log("Main Token", token)
   
   return (
     <div>
@@ -33,7 +40,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<Signup />} />
-        <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/profile/:profileId" element={<Profile />} />
         <Route path="/post/:postId" element={<PostDetails />} />
         <Route path="/explore" element={<People />} />
       </Routes>

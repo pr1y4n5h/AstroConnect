@@ -10,9 +10,9 @@ import { followUser, unfollowUser } from "../../Redux/userSlice";
 const Rightbar = ({ user }) => {
   
   const [following, setFollowing] = useState([]);
-  const [isFollowed, setFollowed] = useState(false);
-  const { userInfo: authUser, token } = useSelector((state) => state.user);
+  const { userInfo: authUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [isFollowed, setFollowed] = useState(user?.followers?.includes(authUser?._id));
 
   const handleFollow = async () => {
     try {
@@ -24,9 +24,6 @@ const Rightbar = ({ user }) => {
           }
         );
         dispatch(unfollowUser(user._id));
-        // setFollowing((following) =>
-        //   following.filter((item) => item !== authUser._id)
-        // );
       } else {
         await axios.post(
           `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${user._id}/follow`,
@@ -35,7 +32,6 @@ const Rightbar = ({ user }) => {
           }
         );
         dispatch(followUser(user._id));
-        // setFollowing((following) => [...following, authUser._id]);
       }
       setFollowed((isFollowed) => !isFollowed);
     } catch (error) {
@@ -44,9 +40,10 @@ const Rightbar = ({ user }) => {
   };
 
   useEffect(() => {
-    setFollowed(authUser?.followings?.includes(user?._id));
-    console.log(user);
-  }, [authUser, user]);
+    setFollowed(user?.followers?.includes(authUser?._id));
+  }, [user?._id]);
+
+  // console.log("Logged user followings", authUser?.followings?.includes(user?._id));
 
   async function fetchFollowing() {
     try {
@@ -61,8 +58,6 @@ const Rightbar = ({ user }) => {
       console.log(error);
     }
   }
-
-  console.log(isFollowed);
 
   useEffect(() => {
     fetchFollowing();
@@ -110,7 +105,7 @@ const Rightbar = ({ user }) => {
         <h3 className="text-lg font-bold font-sans mb-4"> Followings</h3>
         <div className="profile-following-right-div">
           {following.map((item) => (
-            <Link to={`/profile/${item._id}`}>
+            <Link key={item._id} to={`/profile/${item._id}`}>
               <div className="profile-following-right">
                 <div className="profile-pic-medium">
                   <span>{item.username.charAt().toUpperCase()}</span>
@@ -130,7 +125,7 @@ const Rightbar = ({ user }) => {
 
   return (
     <div className="rightbar-container">
-      {user ? <ProfileRightBar /> : <HomeRightBar />}
+      {user && <ProfileRightBar />}
     </div>
   );
 };

@@ -5,14 +5,17 @@ import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
-import {
-  updatePosts,
-} from "../../Redux/postSlice";
 import Navbar from "../../Components/Navbar/Navbar";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import Rightbar from "../../Components/Rightbar/Rightbar";
-import { useGetAuthor } from "../../Hooks/useGetAuthor";
-import { Edit, Delete, Favourite, AccessTimeSharp, Favorite, FavoriteBorder } from "@material-ui/icons";
+import {
+  Edit,
+  Delete,
+  Favourite,
+  AccessTimeSharp,
+  Favorite,
+  FavoriteBorder,
+} from "@material-ui/icons";
 import moment from "moment";
 import DeletePost from "../../Components/Post/DeletePost";
 import React from "react";
@@ -25,15 +28,13 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 const PostDetails = () => {
-  const { userInfo: authUser } = useSelector((state) => state.user);
+  const { userInfo: authUser, allUsers } = useSelector((state) => state.user);
+  const { posts, pending } = useSelector((state) => state.post);
   const { postId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [isEdit, setEdit] = useState(false);
-
   const [currentPost, setCurrentPost] = useState({});
-
   const [postText, setPostText] = useState("");
 
   const [open, setOpen] = React.useState(false);
@@ -45,34 +46,43 @@ const PostDetails = () => {
     setOpen(false);
   };
 
-  const currentUser = useGetAuthor(currentPost?.userId, postId);
-
   async function fetchCurrentPost(postID) {
-
     try {
-      const {data, status} = await axios.get(`https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postID}`);
+      const { data, status } = await axios.get(
+        `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postID}`
+      );
 
-      if(status === 200){
+      if (status === 200) {
         setCurrentPost(data);
       }
-    }
-    catch(error) {
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     }
   }
 
+  
+  const currentUser = allUsers.find((item) => item._id === currentPost?.userId);
+
+  // const isEditable = currentUser?._id === 
+
+
+  
   useEffect(() => {
     // dispatch(getCurrentPost(postId));
-    fetchCurrentPost(postId)
-    
-  }, [postId]);
+    fetchCurrentPost(postId);
+  }, []);
 
   useEffect(() => {
-    setPostText(currentPost?.desc)
-  },[currentPost?.desc])
+    if(currentPost) {
+      if(currentUser?._id === authUser._id)
+      console.log((currentUser?._id === authUser._id))
+    }
 
-  const processJoinedDate = (ISOString) => {
-    const currentDate = new Date(ISOString).toUTCString().substring(5, 16);
+    console.log(currentUser?._id)
+  },[])
+
+  const processJoinedDate = (createdTime) => {
+    const currentDate = new Date(createdTime).toUTCString().substring(5, 16);
     return currentDate;
   };
 
@@ -89,10 +99,11 @@ const PostDetails = () => {
         // dispatch(updatePosts({postId, postText}))
 
         // dispatch(updateCurrentPost(postText));
-        
+
         // setPost(postText)
-        
-        setCurrentPost( {...currentPost, desc: postText} ); 
+
+        setCurrentPost({ ...currentPost, desc: postText });
+        setPostText(currentPost?.desc);
         setOpen(false);
       }
     } catch (error) {
@@ -100,47 +111,45 @@ const PostDetails = () => {
     }
   };
 
-  useEffect(() => {
-    if(currentPost?.userId === authUser._id) {
-      setEdit(true)
-    }
-  },[postId])
-
-  console.log(currentPost?.userId)
-
   const isLiked = () => currentPost?.likes?.includes(authUser._id);
 
   async function likeHandler() {
-      try {
-        if (isLiked()) {
-          const { status } = await axios.post(
-            `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postId}/like`,
-            {
-              userId: authUser._id,
-              type: "REMOVE",
-            }
-          );
-          if (status === 200) {
-            setCurrentPost( {...currentPost, likes: currentPost.likes.filter(item => item !== authUser._id)});
+    try {
+      if (isLiked()) {
+        const { status } = await axios.post(
+          `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postId}/like`,
+          {
+            userId: authUser._id,
+            type: "REMOVE",
           }
-        } else {
-          const { status } = await axios.post(
-            `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postId}/like`,
-            {
-              userId: authUser._id,
-              type: "ADD",
-            }
-          );
-          if (status === 200) {
-            setCurrentPost( {...currentPost, likes: [...currentPost.likes, authUser._id]});
-          }
+        );
+        if (status === 200) {
+          setCurrentPost({
+            ...currentPost,
+            likes: currentPost.likes.filter((item) => item !== authUser._id),
+          });
         }
-      } catch (error) {
-        console.log(error);
+      } else {
+        const { status } = await axios.post(
+          `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postId}/like`,
+          {
+            userId: authUser._id,
+            type: "ADD",
+          }
+        );
+        if (status === 200) {
+          setCurrentPost({
+            ...currentPost,
+            likes: [...currentPost.likes, authUser._id],
+          });
+        }
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-    const {likes} = currentPost
+  const { likes, img } = currentPost;
 
   return (
     <>
@@ -163,12 +172,15 @@ const PostDetails = () => {
                     {currentUser?.username}
                   </div>
                   <div className="text-gray-600	text-sm">
-                    <AccessTimeSharp fontSize="small" /> {processJoinedDate(currentPost?.createdAt)}
+                    <AccessTimeSharp fontSize="small" />{" "}
+                    {processJoinedDate(currentPost?.createdAt)}
                   </div>
                 </div>
               </div>
 
-              <div className={`mt-4 ${!isEdit && "hidden" }`}>
+              {/* ${!isEdit && "hidden"} */}
+
+              <div className={`mt-4 `}>
                 <Edit
                   onClick={handleClickOpen}
                   className="mr-3 cursor-pointer"
@@ -213,18 +225,35 @@ const PostDetails = () => {
             {/* body */}
 
             <div className="px-4 py-4">
-              <p> {currentPost?.desc} </p>
+              <div>
+                <p> {currentPost?.desc} </p>
 
-              <div className="my-6">
-
-              <span onClick={likeHandler}>
-            { isLiked() ? <Favorite
-              className="text-red-500 cursor-pointer"
-            /> : <FavoriteBorder className="text-red-500 cursor-pointer" />  }
-            </span>
-            <span className="text-sm"> {likes?.length < 1 && "Be the first one to Like this post"} {isLiked() && likes?.length === 1 && "You Liked this post!"} {likes?.length > 1 && isLiked() &&  `You and ${likes?.length - 1} others liked this Post!` } {!isLiked() && likes?.length !== 0 && `${likes?.length} people liked this Post`}  </span>
+                {img && (
+                  <img
+                    className="mt-6"
+                    src={`https://astroconnect-backend.pr1y4n5h.repl.co/${img}`}
+                  />
+                )}
               </div>
-
+              <div className="my-6">
+                <button  className="mr-4" onClick={likeHandler}>
+                  {isLiked() ? (
+                    <Favorite className="text-red-500 cursor-pointer" />
+                  ) : (
+                    <FavoriteBorder className="text-red-500 cursor-pointer" />
+                  )}
+                </button>
+                <span className="text-sm">
+                  {likes?.length < 1 && "Be the first one to Like this post"}
+                  {isLiked() && likes?.length === 1 && "You Liked this post!"}
+                  {likes?.length > 1 &&
+                    isLiked() &&
+                    `You and ${likes?.length - 1} others liked this Post!`}
+                  {!isLiked() &&
+                    likes?.length !== 0 &&
+                    `${likes?.length} people liked this Post`}
+                </span>
+              </div>
             </div>
           </div>
         </div>

@@ -29,10 +29,6 @@ function App() {
   useEffect(() => {
     token && dispatch(fetchAllUsers(userInfo?._id))
   }, [token])
-
-  // console.log("Main", allUsers)
-  // console.log("Main User", userInfo)
-  // console.log("Main Token", token)
   
   return (
     <div>

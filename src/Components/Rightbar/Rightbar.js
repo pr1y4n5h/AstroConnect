@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { Add, Remove } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { followUser, unfollowUser } from "../../Redux/userSlice";
+import { follow, unfollow} from "../../Redux/userSlice";
 
 const Rightbar = ({ user }) => {
   
@@ -14,6 +14,7 @@ const Rightbar = ({ user }) => {
   const dispatch = useDispatch();
   const [isFollowed, setFollowed] = useState(user?.followers?.includes(authUser?._id));
 
+ 
   const handleFollow = async () => {
     try {
       if (isFollowed) {
@@ -23,7 +24,7 @@ const Rightbar = ({ user }) => {
             userId: authUser._id,
           }
         );
-        dispatch(unfollowUser(user._id));
+        dispatch(unfollow({ user: user._id, loggedUser: authUser._id }));
       } else {
         await axios.post(
           `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${user._id}/follow`,
@@ -31,9 +32,10 @@ const Rightbar = ({ user }) => {
             userId: authUser._id,
           }
         );
-        dispatch(followUser(user._id));
+        dispatch(follow({ user: user._id, loggedUser: authUser._id }));
       }
       setFollowed((isFollowed) => !isFollowed);
+      // console.log(isFollowed)
     } catch (error) {
       console.log(error);
     }
@@ -42,8 +44,6 @@ const Rightbar = ({ user }) => {
   useEffect(() => {
     setFollowed(user?.followers?.includes(authUser?._id));
   }, [user?._id]);
-
-  // console.log("Logged user followings", authUser?.followings?.includes(user?._id));
 
   async function fetchFollowing() {
     try {

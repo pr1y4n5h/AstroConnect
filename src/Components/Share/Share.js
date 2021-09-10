@@ -64,13 +64,13 @@ const Share = ({user}) => {
 
         </div>
         {file && (
-          <div className="relative">
+          <div className="relative mt-4">
             <img
               className="object-cover	w-full"
               src={URL.createObjectURL(file)}
             />
             <Cancel
-              className="absolute -top-5 -right-5 cursor-pointer"
+              className="absolute -top-5 -right-5 cursor-pointer text-red-500	"
               onClick={() => setFile(null)}
             />
           </div>

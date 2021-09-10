@@ -48,7 +48,7 @@ const Profile = () => {
             <Rightbar user={profileOwner}/>
           </div>
         </div>
-      </div>e
+      </div>
     </>
   );
 };

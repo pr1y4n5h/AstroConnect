@@ -21,7 +21,7 @@ const Feed = ({userID}) => {
 
   return (
     <div className="feed-container">
-      <div className="w-full">
+      <div className="w-full md:px-6">
         <Share user={userID} />
         { pending ? (
           <div className="flex justify-center items-center h-80"> <CircularProgress color="secondary" /> </div>

@@ -1,16 +1,15 @@
-import axios from "axios";
 import { useSelector } from "react-redux";
 import Navbar from "../../Components/Navbar/Navbar";
+import PeopleCard from "../../Components/People/PeopleCard";
 import Rightbar from "../../Components/Rightbar/Rightbar";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import "./people.style.css";
 
 const People = () => {
-
-  const {allUsers, userInfo: authUser} = useSelector(state => state.user)
-
-  const allPeople = allUsers.filter(people => people._id !== authUser._id);
-
+  const { allUsers, userInfo: authUser } = useSelector((state) => state.user);
+  
+  const allPeople = allUsers.filter((people) => people._id !== authUser._id);
+  
 
 
   return (
@@ -20,10 +19,9 @@ const People = () => {
         <Sidebar />
         <div className="post-details">
           <div className="people-details-wrapper">
-          {allPeople.map(item => (
-            <h3>{item.username} </h3>
-          ))
-           } 
+            {allPeople.map((item) => (
+              <PeopleCard person={item} key={item._id} />
+            ))}
           </div>
         </div>
         <Rightbar />

@@ -11,6 +11,7 @@ export const loginUser = createAsyncThunk("user/login", async (user) => {
   return res.data;
 });
 
+
 export const fetchAllUsers = createAsyncThunk("user/allUsers", async (userID) => {
   const {data} = await axios.get(
     `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${userID}/allusers`);
@@ -39,6 +40,7 @@ export const userSlice = createSlice({
     token: null,
     status: {
       userLoggedIn: false,
+      follow: null
     },
     pending: null,
     error: null,
@@ -61,12 +63,16 @@ export const userSlice = createSlice({
       state.allUsers = null
     },
 
-    followUser: (state, action) => {
-      state.userInfo = {...state.userInfo, followings: [...state.userInfo.followings, action.payload]}
+    follow: (state, action) => {
+      const allUsers = state.allUsers.map(item => item._id === action.payload.user ? {...item, followers: [...item.followers, action.payload.loggedUser]} : item);
+
+      return {...state, allUsers}
     },
 
-    unfollowUser: (state, action) => {
-      state.userInfo = {...state.userInfo, followings: state.userInfo.followings.filter(item => item !== action.payload)}
+    unfollow: (state, action) => {
+      const allUsers = state.allUsers.map(item => item._id === action.payload.user ? {...item, followers: item.followers.filter(user => user !== action.payload.loggedUser)} : item )
+
+      return {...state, allUsers}
     },
 
     resetError: (state) => {
@@ -108,6 +114,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setToken, setUser,logOutUser, resetError, followUser, unfollowUser } =
+export const { follow, unfollow, setToken, setUser,logOutUser, resetError } =
   userSlice.actions;
 export default userSlice.reducer;

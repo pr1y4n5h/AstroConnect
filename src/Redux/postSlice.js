@@ -35,15 +35,12 @@ export const getCurrentPost = createAsyncThunk(
   }
 );
 
-export const newPost = createAsyncThunk(
-  "post/newPost",
-  async ({ userId, desc }) => {
+export const createNewPost = createAsyncThunk(
+  "post/createNewPost",
+  async (newPost) => {
     const { data } = await axios.post(
       "https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/",
-      {
-        userId,
-        desc,
-      }
+        newPost
     );
     return data;
   }
@@ -138,11 +135,11 @@ export const postSlice = createSlice({
     },
 
 
-    [newPost.pending]: (state) => {
+    [createNewPost.pending]: (state) => {
       state.pending = true;
       state.error = false;
     },
-    [newPost.fulfilled]: (state, action) => {
+    [createNewPost.fulfilled]: (state, action) => {
       state.pending = false;
       state.error = false;
       state.posts.unshift(action.payload);

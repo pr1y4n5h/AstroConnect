@@ -9,15 +9,15 @@ import { addToLikes, removeFromLikes } from "../../Redux/postSlice";
 import { useGetAuthor } from "../../Hooks/useGetAuthor";
 
 const Post = ({ post }) => {
-  const { desc, likes } = post;
+  const { desc, likes, img } = post;
 
   const user = useGetAuthor(post?.userId)
-
+  
   const { userInfo: authUser, allUsers } = useSelector((state) => state.user);
 
   // const findOwner = allUsers.find(item => item._id === post.userID)
 
-  // console.log("findOwner", findOwner)
+  console.log("findOwner", post.img)
 
   const dispatch = useDispatch();
 
@@ -70,6 +70,7 @@ const Post = ({ post }) => {
         <Link to={`/post/${post._id}`}>
           <div className="mt-4 ml-2">
             <div> {desc} </div>
+            {post.img && <img className="mt-6" src={`https://astroconnect-backend.pr1y4n5h.repl.co/${img}`} />}
           </div>
         </Link>
         <div className="flex justify-between items-center mt-4">

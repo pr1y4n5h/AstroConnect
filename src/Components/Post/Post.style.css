@@ -6,7 +6,6 @@
 }
 
 .post-card {
-    
     /* height: 170px; */
     margin-top: 2rem;
     padding: 1rem 1rem;
@@ -16,21 +15,6 @@
     box-shadow: 0px 2px 6px 1px rgba(0, 0, 0, 0.37);
 
 }
-
-
-/* 
-.post-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.post-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-} */
-
 
 .profile-pic-sm {
     width: 40px;

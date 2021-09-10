@@ -3,9 +3,9 @@ import axios from "axios";
 
 export const fetchTimeline = createAsyncThunk(
   "post/timeline",
-  async (authUser) => {
+  async (userID) => {
     const { data } = await axios.get(
-      `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/timeline/${authUser._id}`
+      `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/timeline/${userID}`
     );
 
     return data;

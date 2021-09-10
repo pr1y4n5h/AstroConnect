@@ -37,6 +37,9 @@ export const userSlice = createSlice({
     userInfo: {},
     allUsers: [],
     token: null,
+    status: {
+      userLoggedIn: false,
+    },
     pending: null,
     error: null,
   },
@@ -79,6 +82,7 @@ export const userSlice = createSlice({
     [loginUser.fulfilled]: (state, action) => {
       state.pending = false;
       state.error = false;
+      state.status.userLoggedIn = true;
       state.userInfo = action.payload.user;
       state.token = action.payload.token;
       localStorage.setItem("token", JSON.stringify(state.token));

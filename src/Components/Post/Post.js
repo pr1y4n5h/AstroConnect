@@ -55,7 +55,7 @@ const Post = ({ post }) => {
 
   return (
     <div className="post-container">
-      <div className="p-4">
+      <div className="post-card">
         <div className="flex justify-between items-center mt-4">
           <div className="flex items-center">
             <div className="profile-pic-sm mr-3">

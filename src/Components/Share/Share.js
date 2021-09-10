@@ -46,7 +46,7 @@ const Share = ({user}) => {
   return (
     <div className="share-container">
       {!user && <div className="p-6">
-        <div className="share-top">
+        <div>
           <TextField
             label="What's in your mind?"
             multiline

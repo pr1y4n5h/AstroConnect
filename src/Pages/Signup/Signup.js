@@ -62,12 +62,14 @@ const Signup = () => {
           Sign up
         </h1>
 
-        <div className="mb-4 w-full flex items-center">
+        <div className="mb-6 w-full flex items-center">
           <FaUser className="mr-2 text-xl" />
           <TextField
             className="mb-4 w-full"
             label="Enter your Username"
             variant="outlined"
+            error
+            helperText="Incorrect entry."
             value={user.username}
             ref={inputRef}
             required
@@ -75,11 +77,12 @@ const Signup = () => {
           />
         </div>
 
-        <div className="mb-4 w-full flex items-center">
+        <div className="mb-6 w-full flex items-center">
           <HiMail className="mr-2 text-xl" />
           <TextField
-            className="mb-4 w-full"
+            className="w-full"
             label="Enter your Email"
+            id="standard-basic"
             variant="outlined"
             value={user.email}
             required
@@ -87,7 +90,7 @@ const Signup = () => {
           />
         </div>
 
-        <div className="mb-4 w-full flex items-center relative">
+        <div className="mb-6 w-full flex items-center relative">
           <FaKey className="mr-2 text-xl" />
           <TextField
             type={isVisible ? "text" : "password"}

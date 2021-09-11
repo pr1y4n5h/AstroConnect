@@ -5,21 +5,14 @@ import Sidebar from "../../Components/Sidebar/Sidebar";
 import "./Profile.style.css";
 import { useParams } from "react-router";
 import { useScrollToTop } from "../../Hooks/UseScrollToTop";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCurrentUser } from "../../Redux/userSlice";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
   const { profileId } = useParams();
-  const dispatch = useDispatch();
 
-  const { allUsers, currentUser } = useSelector((state) => state.user);
+  const { allUsers } = useSelector((state) => state.user);
 
-  // const profileOwner = allUsers.find((item) => item._id === profileId);
-
-  useEffect(() => {
-    dispatch(fetchCurrentUser(profileId))
-  }, [])
+  const profileOwner = allUsers.find((item) => item._id === profileId);
 
   useScrollToTop();
 
@@ -36,22 +29,22 @@ const Profile = () => {
                 style={{ width: "100%", height: "250px", objectFit: "cover" }}
               />
               <div className="profile-pic">
-                <span>{currentUser?.username?.charAt(0).toUpperCase()}</span>
+                <span>{profileOwner?.username.charAt(0).toUpperCase()}</span>
               </div>
             </div>
 
             <div className="profile-info">
               <h4 className="text-xl font-extrabold font-sans">
-                {currentUser?.username}
+                {profileOwner?.username}
               </h4>
               <span className="text-lg font-light font-sans">
-                {currentUser?.bio}
+                {profileOwner?.bio}
               </span>
             </div>
           </div>
           <div className="profile-bottom">
             <Feed userID={profileId} />
-            <Rightbar user={currentUser} />
+            <Rightbar user={profileOwner} />
           </div>
         </div>
       </div>

@@ -19,13 +19,6 @@ export const fetchAllUsers = createAsyncThunk("user/allUsers", async (userID) =>
   return data;
 });
 
-export const fetchCurrentUser = createAsyncThunk("user/currentUser", async (userID) => {
-  const {data} = await axios.get(
-    `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${userID}`);
-
-  return data;
-});
-
 
 
 
@@ -34,7 +27,6 @@ export const userSlice = createSlice({
   initialState: {
     userInfo: JSON.parse(localStorage?.getItem("user")) || {},
     allUsers: [],
-    currentUser: {},
     token: null || JSON.parse(localStorage?.getItem("token")),
     status: {
       userLoggedIn: false,
@@ -107,19 +99,7 @@ export const userSlice = createSlice({
       state.pending = false;
       state.error = null;
       state.allUsers = action.payload;
-    },
-
-    [fetchCurrentUser.pending]: (state) => {
-      state.pending = true;
-      state.error = false;
-    },
-
-    [fetchCurrentUser.fulfilled]: (state, action) => {
-      state.pending = false;
-      state.error = null;
-      state.currentUser = action.payload;
-    },
-
+    }
   },
 });
 

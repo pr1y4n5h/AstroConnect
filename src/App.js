@@ -1,8 +1,6 @@
 import "./App.css";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Navbar from "./Components/Navbar/Navbar";
-import Sidebar from "./Components/Sidebar/Sidebar";
 import Signup from "./Pages/Signup/Signup";
 import Login from "./Pages/Login/Login";
 import Profile from "./Pages/Profile/Profile";
@@ -16,7 +14,7 @@ import { PrivateRoute } from "./PrivateRoute";
 
 function App() {
   const dispatch = useDispatch();
-  const { userInfo, token } = useSelector((state) => state.user);
+
 
   useEffect(() => {
     const savedToken = JSON.parse(localStorage?.getItem("token"));
@@ -25,9 +23,7 @@ function App() {
     savedUser && dispatch(setUser(savedUser));
   }, []);
 
-  useEffect(() => {
-    token && dispatch(fetchAllUsers(userInfo?._id));
-  }, [token]);
+
 
   return (
     <div>

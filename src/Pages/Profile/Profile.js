@@ -5,12 +5,20 @@ import Sidebar from "../../Components/Sidebar/Sidebar";
 import "./Profile.style.css";
 import { useParams } from "react-router";
 import { useScrollToTop } from "../../Hooks/UseScrollToTop";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { fetchAllUsers } from "../../Redux/userSlice";
 
 const Profile = () => {
   const { profileId } = useParams();
 
-  const { allUsers } = useSelector((state) => state.user);
+  const { allUsers, userInfo: authUser } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAllUsers(authUser?._id));
+  }, []);
 
   const profileOwner = allUsers.find((item) => item._id === profileId);
 

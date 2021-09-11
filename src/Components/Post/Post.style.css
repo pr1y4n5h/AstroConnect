@@ -1,16 +1,20 @@
 .post-container {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .post-card {
-  /* height: 170px; */
   margin-top: 2rem;
   padding: 1rem 1rem;
   width: 650px;
+  transition: all 0.2s ease-in-out;
   border-radius: 10px;
-  -webkit-box-shadow: 0px 2px 6px 1px rgba(0, 0, 0, 0.37);
-  box-shadow: 0px 2px 6px 1px rgba(0, 0, 0, 0.37);
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+}
+
+.post-card:hover {
+  transform: scale(1.1);
 }
 
 .profile-pic-sm {
@@ -25,8 +29,10 @@
   border: 2px solid #c0c0c0;
 }
 
+
 @media all and (max-width: 768px) {
   .post-card {
-    width: 100%;
+    width: 310px;
+    padding: 0.5rem 0.5rem;
   }
 }

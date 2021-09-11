@@ -82,8 +82,8 @@ const Share = ({user}) => {
         >
           <div className="flex justify-between">
             <label htmlFor="file" className="share-option">
-              <PermMedia className="mr-1" />
-              <span className="font-small text-xs">Photo/video </span>
+              <PermMedia className="mr-3" />
+              <span className="font-small text-xs">Share Photos </span>
               <input
                 className="hidden"
                 type="file" 
@@ -92,16 +92,6 @@ const Share = ({user}) => {
                 onChange={(e) => setFile(e.target.files[0])}
               />
             </label>
-
-            <div className="share-option">
-              <Room className="mr-1" />
-              <span className="font-medium text-xs">Location </span>
-            </div>
-
-            <div className="share-option">
-              <EmojiEmotions className="mr-1" />
-              <span className="font-medium text-xs">Feeling </span>
-            </div>
           </div>
           <Button
             variant="contained"

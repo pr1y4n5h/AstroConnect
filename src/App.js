@@ -15,30 +15,29 @@ import People from "./Pages/People/People";
 import { PrivateRoute } from "./PrivateRoute";
 
 function App() {
-
   const dispatch = useDispatch();
-  const { userInfo, allUsers, token } = useSelector(
-    (state) => state.user
-  );
+  const { userInfo, token } = useSelector((state) => state.user);
 
   useEffect(() => {
-    dispatch(setToken(JSON.parse(localStorage?.getItem("token"))))
-    dispatch(setUser(JSON.parse(localStorage?.getItem("user"))));
-  }, [token])
+    const savedToken = JSON.parse(localStorage?.getItem("token"));
+    const savedUser = JSON.parse(localStorage?.getItem("user"));
+    savedToken && dispatch(setToken(savedToken));
+    savedUser && dispatch(setUser(savedUser));
+  }, []);
 
   useEffect(() => {
-    token && dispatch(fetchAllUsers(userInfo?._id))
-  }, [token])
-  
+    token && dispatch(fetchAllUsers(userInfo?._id));
+  }, [token]);
+
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<Signup />} />
-        <Route path="/profile/:profileId" element={<Profile />} />
-        <Route path="/post/:postId" element={<PostDetails />} />
-        <Route path="/explore" element={<People />} />
+        <PrivateRoute path="/" element={<Home />} />
+        <PrivateRoute path="/profile/:profileId" element={<Profile />} />
+        <PrivateRoute path="/post/:postId" element={<PostDetails />} />
+        <PrivateRoute path="/explore" element={<People />} />
       </Routes>
       <ToastContainer theme="colored" />
     </div>

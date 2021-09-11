@@ -21,7 +21,7 @@ const Feed = ({userID}) => {
 
   return (
     <div className="feed-container">
-      <div className="w-full md:px-6">
+      <div className="w-full px-4"> 
         <Share user={userID} />
         { pending ? (
           <div className="flex justify-center items-center h-80"> <CircularProgress color="secondary" /> </div>
@@ -29,7 +29,7 @@ const Feed = ({userID}) => {
 
           posts.length > 0 && token ? (
           userID ? posts?.map((item) => <Post key={item._id} post={item} />) : 
-          posts?.map((item) => <Post key={item._id} post={item} />)) : <div className="h-80 flex items-center justify-center w-full"> <h2 className="text-center text-2xl"> <Image fontSize="large" /> Nothing to show here! </h2> </div>
+          posts?.map((item) => <Post key={item._id} post={item} />)) : <div className="h-80 flex items-center justify-center w-full"> <h2 className="text-center text-2xl h-80 flex items-center justify-center"> <Image fontSize="large" /> Nothing to show here! </h2> </div>
         )}
       </div>
     </div>

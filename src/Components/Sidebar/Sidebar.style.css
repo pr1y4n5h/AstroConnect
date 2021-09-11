@@ -1,17 +1,10 @@
 .sidebar-container{
     flex: 3;
-    /* border: 1px solid #000; */
     height: calc(100vh - 80px);
-    /* overflow-y: scroll; */
     position: sticky;
     top: 80px;
     z-index: 100;
 }
-/* 
-::-webkit-scrollbar {
-
-} */
-
 
 @media screen and (max-width: 768px){
     .sidebar-container{

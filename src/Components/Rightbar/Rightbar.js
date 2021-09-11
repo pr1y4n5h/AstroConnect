@@ -109,7 +109,7 @@ const Rightbar = ({ user }) => {
                 <div className="profile-pic-medium">
                   <span>{item.username.charAt().toUpperCase()}</span>
                 </div>
-                <div className="text-center">{item.username}</div>
+                <div className="text-center">@{item.username}</div>
               </div>
             </Link>
           ))}
@@ -124,7 +124,7 @@ const Rightbar = ({ user }) => {
 
   return (
     <div className="rightbar-container">
-      {user && <ProfileRightBar />}
+      {user ? <ProfileRightBar /> : <HomeRightBar /> }
     </div>
   );
 };

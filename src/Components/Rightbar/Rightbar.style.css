@@ -7,7 +7,6 @@
 .profile-following-right-div {
     display: flex;
     flex-wrap: wrap;
-    /* justify-content: space-evenly; */
 }
 
 .profile-following-right{
@@ -15,7 +14,14 @@
     flex-direction: column;
     margin-right: 1rem;
     margin-bottom: 1rem;
+  transition: all 0.2s ease-in-out;
 }
+
+.profile-following-right:hover {
+  transform: scale(1.1);
+}
+
+
 
 .profile-pic-medium {
     width: 75px;
@@ -37,11 +43,7 @@
     .profile-right{
         width: 100%;
     }
-
-    .rightbar-container{
-        display: none;
-    }
-
+    
     .profile-top{
         width: 100%;
     }

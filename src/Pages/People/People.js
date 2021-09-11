@@ -10,8 +10,6 @@ const People = () => {
   
   const allPeople = allUsers.filter((people) => people._id !== authUser._id);
   
-
-
   return (
     <>
       <Navbar />

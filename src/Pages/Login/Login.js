@@ -2,7 +2,7 @@ import { TextField, Button, CircularProgress } from "@material-ui/core";
 import "./Login.style.css";
 import { FaUser, FaKey, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, setToken } from "../../Redux/userSlice";
 import { toastFailText, toastSuccessText } from "../../Components/Toast";
@@ -14,18 +14,19 @@ const Login = () => {
   const dispatch = useDispatch();
   const [isVisible, setVisible] = useState(false);
   const navigate = useNavigate();
+  const { state } = useLocation(); 
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
 
-  function submitHandler(e) {
+ async function submitHandler(e) {
     e.preventDefault();
     dispatch(loginUser(credentials));
   }
 
   if(error === false && pending === false) {
-    navigate("/")
+    navigate(state?.from ? state.from : "/");
   }
 
   return (
@@ -80,7 +81,7 @@ const Login = () => {
             variant="contained"
             color="primary"
           >
-            {pending ? <CircularProgress color="secondary" /> : "Login"}
+            {pending ?  <CircularProgress size={25} color="secondary" /> : "Login"}
           </Button>
         </div>
         <h3 className="text-sm font-medium font-sans mb-3 text-center">

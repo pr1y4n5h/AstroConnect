@@ -19,28 +19,14 @@ export const fetchAllUsers = createAsyncThunk("user/allUsers", async (userID) =>
   return data;
 });
 
-
-// userInfo: {
-//   // initialise this as null
-//     _id: "61304e820abddf3713ad0013",
-//     username: "preeti",
-//     email: "preeti@email.com",
-//     followers: ["613050260abddf3713ad001b", "61304dc50abddf3713ad000c"],
-//     followings: ["61304dc50abddf3713ad000c", "613050260abddf3713ad001b"],
-//     isAdmin: false
-// }
-
-
-
 export const userSlice = createSlice({
   name: "user",
   initialState: {
-    userInfo: {},
+    userInfo: JSON.parse(localStorage?.getItem("user")) || {},
     allUsers: [],
-    token: null,
+    token: null || JSON.parse(localStorage?.getItem("token")),
     status: {
       userLoggedIn: false,
-      follow: null
     },
     pending: null,
     error: null,
@@ -114,6 +100,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { follow, unfollow, setToken, setUser,logOutUser, resetError } =
+export const { follow, unfollow, setToken, setUser, logOutUser, resetError } =
   userSlice.actions;
 export default userSlice.reducer;

@@ -8,6 +8,7 @@ import Sidebar from "../../Components/Sidebar/Sidebar";
 import Rightbar from "../../Components/Rightbar/Rightbar";
 import {
   AccessTimeSharp,
+  Create,
   Favorite,
   FavoriteBorder,
 } from "@material-ui/icons";
@@ -37,8 +38,10 @@ const PostDetails = () => {
   }, [postId]);
 
   useEffect(() => {
-    currentPost && currentUser && setEditable(currentPost.userId === authUser._id);
-  },[currentPost, currentUser])
+    currentPost &&
+      currentUser &&
+      setEditable(currentPost.userId === authUser._id);
+  }, [currentPost, currentUser]);
 
   const processJoinedDate = (createdTime) => {
     const currentDate = new Date(createdTime).toUTCString().substring(5, 16);
@@ -70,68 +73,74 @@ const PostDetails = () => {
               <CircularProgress color="secondary" />
             </div>
           ) : (
-            <div className="post-details-wrapper">
-              {/* top */}
-              <div className="flex justify-between">
-                <div className="flex">
-                  <div className="profile-pic-medium mx-3 my-3">
-                    <span className="text-xl">
-                      {currentUser?.username?.charAt().toUpperCase()}
+            <div className="w-full px-4">
+              <div className="post-details-card">
+                {/* top */}
+                <div className="flex justify-between">
+                  <div className="flex">
+                    <div className="profile-pic-detail-medium mx-3 md:mx-4">
+                      <span className="text-sm md:text-xl">
+                        {currentUser?.username?.charAt().toUpperCase()}
+                      </span>
+                    </div>
+
+                    <div className="h-20 flex flex-col justify-around">
+                      <h3 className="text-xl font-semibold font-sans md:text-2xl text-black mt-4 md:mt-2">
+                        @{currentUser?.username}
+                      </h3>
+                      <div className="text-gray-600	text-sm md:text-base">
+                        <i class="fas fa-clipboard mr-3"></i>
+                        {processJoinedDate(currentPost?.createdAt)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className={`mt-4 ${!isEditable && "hidden"}`}>
+                    <PostUpdateButton
+                      postID={postId}
+                      userID={authUser._id}
+                      currentPost={currentPost}
+                    />
+                    <DeletePost postID={postId} userID={authUser._id} />
+                  </div>
+                </div>
+
+                <div className="px-4 py-4">
+                  <div>
+                    <p> {currentPost?.desc} </p>
+                    {img && (
+                      <img
+                        className="mt-6"
+                        src={`https://astroconnect-backend.pr1y4n5h.repl.co/${img}`}
+                      />
+                    )}
+                  </div>
+                  <div className="flex justify-between">
+                  <div>
+                  <div className="my-6">
+                    <button className="mr-2" onClick={likeHandler}>
+                      {isLiked() ? (
+                        <Favorite className="text-red-500 cursor-pointer" />
+                      ) : (
+                        <FavoriteBorder className="text-red-500 cursor-pointer" />
+                      )}
+                    </button>
+                    <span className="text-xs md:text-sm">
+                      {likes?.length < 1 &&
+                        "Be the first one to Like this post"}
+                      {isLiked() &&
+                        likes?.length === 1 &&
+                        "You Liked this post!"}
+                      {likes?.length > 1 &&
+                        isLiked() &&
+                        `You and ${likes?.length - 1} others liked this Post!`}
+                      {!isLiked() &&
+                        likes?.length !== 0 &&
+                        `${likes?.length} people liked this Post`}
                     </span>
                   </div>
-
-                  <div className="h-20 flex flex-col justify-between">
-                    <div className="text-3xl text-black mt-3">
-                      {currentUser?.username}
-                    </div>
-                    <div className="text-gray-600	text-sm">
-                      <AccessTimeSharp fontSize="small" />
-                      {processJoinedDate(currentPost?.createdAt)}
-                    </div>
                   </div>
-                </div>
-
-                <div className={`mt-4 ${!isEditable && "hidden"}`}>
-                  <PostUpdateButton
-                    postID={postId}
-                    userID={authUser._id}
-                    currentPost={currentPost}
-                  />
-                  <DeletePost postID={postId} userID={authUser._id} />
-                </div>
-              </div>
-
-              {/* body */}
-
-              <div className="px-4 py-4">
-                <div>
-                  <p> {currentPost?.desc} </p>
-
-                  {img && (
-                    <img
-                      className="mt-6"
-                      src={`https://astroconnect-backend.pr1y4n5h.repl.co/${img}`}
-                    />
-                  )}
-                </div>
-                <div className="my-6">
-                  <button className="mr-4" onClick={likeHandler}>
-                    {isLiked() ? (
-                      <Favorite className="text-red-500 cursor-pointer" />
-                    ) : (
-                      <FavoriteBorder className="text-red-500 cursor-pointer" />
-                    )}
-                  </button>
-                  <span className="text-sm">
-                    {likes?.length < 1 && "Be the first one to Like this post"}
-                    {isLiked() && likes?.length === 1 && "You Liked this post!"}
-                    {likes?.length > 1 &&
-                      isLiked() &&
-                      `You and ${likes?.length - 1} others liked this Post!`}
-                    {!isLiked() &&
-                      likes?.length !== 0 &&
-                      `${likes?.length} people liked this Post`}
-                  </span>
+                  <Link to="/" className="mt-6 text-xs md:text-sm hover:underline" > <span> Back to Feed </span> </Link>
+                  </div>
                 </div>
               </div>
             </div>

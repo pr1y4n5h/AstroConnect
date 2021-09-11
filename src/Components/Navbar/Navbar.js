@@ -27,16 +27,15 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-left">
       <Link to="/">
-        <span className="text-xl ml-4 font-bold cursor-pointer">
+        <span className="text-base md:text-xl ml-2 md:ml-4 font-bold cursor-pointer">
           AstroConnect
         </span>
         </Link>
       </div>
 
       <div className="flex items-center justify-around">
-        <ul className="flex mr-10">
+        <ul className="flex">
           <li className="ml-6">Hi {userInfo?.username}! </li>
-          <li className="ml-6">Home</li>
         </ul>
         <div className="mr-6">
           <Button variant="contained"

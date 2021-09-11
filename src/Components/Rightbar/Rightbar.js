@@ -35,7 +35,6 @@ const Rightbar = ({ user }) => {
         dispatch(follow({ user: user._id, loggedUser: authUser._id }));
       }
       setFollowed((isFollowed) => !isFollowed);
-      // console.log(isFollowed)
     } catch (error) {
       console.log(error);
     }

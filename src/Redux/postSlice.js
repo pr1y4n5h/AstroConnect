@@ -23,7 +23,6 @@ export const fetchCurrentUserPosts = createAsyncThunk(
   }
 );
 
-
 export const getCurrentPost = createAsyncThunk(
   "post/currentpost",
   async (postID) => {
@@ -40,7 +39,7 @@ export const createNewPost = createAsyncThunk(
   async (newPost) => {
     const { data } = await axios.post(
       "https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/",
-        newPost
+      newPost
     );
     return data;
   }
@@ -51,7 +50,9 @@ export const postSlice = createSlice({
   initialState: {
     posts: [],
     currentPost: {},
-    loader: false,
+    status: {
+      loading: false,
+    },
     pending: null,
     error: null,
   },
@@ -67,6 +68,7 @@ export const postSlice = createSlice({
           ? { ...item, likes: [...item.likes, action.payload.userId] }
           : item
       );
+
       return { ...state, posts };
     },
 
@@ -82,12 +84,25 @@ export const postSlice = createSlice({
           : post
       );
 
-    
       return { ...state, posts };
     },
 
+    unlikeCurrentPost: (state, action) => {
+      const currentPost = {...state.currentPost, likes: state.currentPost.likes.filter(
+        (item) => item !== action.payload.userId
+      )}
+
+        return {...state, currentPost}
+    },
+
+    likeCurrentPost: (state, action) => {
+      const currentPost = {...state.currentPost, likes : state.currentPost.likes.concat(action.payload.userId)}
+
+      return {...state, currentPost}
+    },
+
     updateCurrentPost: (state, action) => {
-      state.currentPost = { ...state, desc: action.payload };
+      state.currentPost = { ...state.currentPost, desc: action.payload };
     },
 
     setLoader: (state) => {
@@ -127,13 +142,14 @@ export const postSlice = createSlice({
     [getCurrentPost.pending]: (state) => {
       state.pending = true;
       state.error = false;
+      state.status.loading = true;
     },
     [getCurrentPost.fulfilled]: (state, action) => {
       state.pending = false;
       state.error = false;
+      state.status.loading = false;
       state.currentPost = action.payload;
     },
-
 
     [createNewPost.pending]: (state) => {
       state.pending = true;
@@ -155,5 +171,7 @@ export const {
   updatePosts,
   updateCurrentPost,
   setLoader,
+  unlikeCurrentPost,
+  likeCurrentPost
 } = postSlice.actions;
 export default postSlice.reducer;

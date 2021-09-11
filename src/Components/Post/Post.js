@@ -5,6 +5,7 @@ import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToLikes, removeFromLikes } from "../../Redux/postSlice";
+import { likePost, unlikePost } from "../../API/LikePost";
 
 const Post = ({ post }) => {
 
@@ -16,35 +17,18 @@ const Post = ({ post }) => {
 
   const isLiked = () => post?.likes?.includes(authUser._id);
 
+
+
   const likeHandler = async () => {
-    try {
-      if (isLiked()) {
-        const { status } = await axios.post(
-          `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${post._id}/like`,
-          {
-            userId: authUser._id,
-            type: "REMOVE",
-          }
-        );
-        if (status === 200) {
-          dispatch(removeFromLikes({postId: post._id, userId: authUser._id}));
-        }
-      } else {
-        const { status } = await axios.post(
-          `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${post._id}/like`,
-          {
-            userId: authUser._id,
-            type: "ADD",
-          }
-        );
-        if (status === 200) {
-          dispatch(addToLikes({postId: post._id, userId: authUser._id}));
-        }
-      }
-    } catch (error) {
-      console.log(error);
+    if (isLiked()) {
+      await unlikePost(post._id, authUser._id)
+      dispatch(removeFromLikes({postId: post._id, userId: authUser._id}))
     }
-  };
+    else {
+      await likePost(post._id, authUser._id)
+      dispatch(addToLikes({postId: post._id, userId: authUser._id}))
+    }
+  }
 
   return (
     <div className="post-container">

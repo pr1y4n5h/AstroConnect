@@ -38,6 +38,10 @@
         width: 100%;
     }
 
+    .rightbar-container{
+        display: none;
+    }
+
     .profile-top{
         width: 100%;
     }

@@ -47,4 +47,8 @@
     .profile-top{
         width: 100%;
     }
+
+    .rightbar-container{
+      flex: 0;
+  }
 }

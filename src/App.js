@@ -24,7 +24,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    token && dispatch(fetchAllUsers(userInfo?._id));
+    token && dispatch(fetchAllUsers({userID:userInfo?._id, token: token }));
   }, [token]);
 
   return (

@@ -3,9 +3,9 @@ import axios from "axios";
 
 export const fetchTimeline = createAsyncThunk(
   "post/timeline",
-  async (userID) => {
+  async ({userID, token}) => {
     const { data } = await axios.get(
-      `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/timeline/${userID}`
+      `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/timeline/${userID}`, { headers: { authorization: token } }
     );
 
     return data;
@@ -14,9 +14,9 @@ export const fetchTimeline = createAsyncThunk(
 
 export const fetchCurrentUserPosts = createAsyncThunk(
   "post/currentUserposts",
-  async (userID) => {
+  async ({userID, token}) => {
     const { data } = await axios.get(
-      `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/profile/${userID}`
+      `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/profile/${userID}`, { headers: { authorization: token } }
     );
 
     return data;
@@ -25,9 +25,9 @@ export const fetchCurrentUserPosts = createAsyncThunk(
 
 export const getCurrentPost = createAsyncThunk(
   "post/currentpost",
-  async (postID) => {
+  async ({postID, token}) => {
     const { data } = await axios.get(
-      `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postID}`
+      `https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/${postID}`, { headers: { authorization: token } }
     );
 
     return data;
@@ -36,10 +36,10 @@ export const getCurrentPost = createAsyncThunk(
 
 export const createNewPost = createAsyncThunk(
   "post/createNewPost",
-  async (newPost) => {
+  async ({newPost, token}) => {
     const { data } = await axios.post(
       "https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/",
-      newPost
+      newPost, { headers: { authorization: token } }
     );
     return data;
   }

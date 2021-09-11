@@ -2,3 +2,12 @@
     flex: 5;
     border: 1px solid black;
 }
+
+
+@media all and (max-width: 768px) {
+    .feed-container{
+        flex: 12;
+        
+    }    
+  }
+  

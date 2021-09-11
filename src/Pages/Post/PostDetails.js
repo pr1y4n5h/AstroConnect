@@ -6,12 +6,7 @@ import { useParams } from "react-router";
 import Navbar from "../../Components/Navbar/Navbar";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import Rightbar from "../../Components/Rightbar/Rightbar";
-import {
-  AccessTimeSharp,
-  Create,
-  Favorite,
-  FavoriteBorder,
-} from "@material-ui/icons";
+import {Favorite,FavoriteBorder} from "@material-ui/icons";
 import DeletePost from "../../Components/Post/DeletePost";
 import React from "react";
 import {
@@ -24,7 +19,7 @@ import { likePost, unlikePost } from "../../API/LikePost";
 import PostUpdateButton from "../../Components/Post/UpdatePost";
 
 const PostDetails = () => {
-  const { userInfo: authUser, allUsers } = useSelector((state) => state.user);
+  const { userInfo: authUser, allUsers, token } = useSelector((state) => state.user);
   const { currentPost, status } = useSelector((state) => state.post);
   const { postId } = useParams();
   const dispatch = useDispatch();
@@ -34,7 +29,7 @@ const PostDetails = () => {
   const currentUser = allUsers.find((item) => item._id === currentPost?.userId);
 
   useEffect(() => {
-    dispatch(getCurrentPost(postId));
+    dispatch(getCurrentPost({postID: postId, token: token}));
   }, [postId]);
 
   useEffect(() => {
@@ -69,8 +64,8 @@ const PostDetails = () => {
         <Sidebar />
         <div className="post-details">
           {status.loading ? (
-            <div className="flex justify-center items-center h-3/5">
-              <CircularProgress color="secondary" />
+            <div className="loader">
+              <CircularProgress size={60} thickness={4} color="secondary" />
             </div>
           ) : (
             <div className="w-full px-4">

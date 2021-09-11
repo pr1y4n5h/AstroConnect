@@ -8,7 +8,7 @@ import { likePost, unlikePost } from "../../API/LikePost";
 
 const Post = ({ post }) => {
   const { desc, likes, img } = post;
-  const { userInfo: authUser, allUsers } = useSelector((state) => state.user);
+  const { userInfo: authUser, allUsers, token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const findOwner = allUsers?.find((item) => item._id === post.userId);
 
@@ -16,10 +16,10 @@ const Post = ({ post }) => {
 
   const likeHandler = async () => {
     if (isLiked()) {
-      await unlikePost(post._id, authUser._id);
-      dispatch(removeFromLikes({ postId: post._id, userId: authUser._id }));
+      await unlikePost(post._id, authUser._id, token);
+      dispatch(removeFromLikes({ postId: post._id, userId: authUser._id}));
     } else {
-      await likePost(post._id, authUser._id);
+      await likePost(post._id, authUser._id, token);
       dispatch(addToLikes({ postId: post._id, userId: authUser._id }));
     }
   };

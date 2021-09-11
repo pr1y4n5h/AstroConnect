@@ -15,7 +15,7 @@ const Feed = ({userID}) => {
 
   useEffect(() => {
     if(token) {
-      userID ? dispatch(fetchCurrentUserPosts(userID)) : dispatch(fetchTimeline(userInfo._id));
+      userID ? dispatch(fetchCurrentUserPosts({userID: userID, token: token})) : dispatch(fetchTimeline({userID: userInfo._id, token: token}));
     }
   }, [userID, token]);
 

@@ -10,12 +10,12 @@ import {
 } from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateCurrentPost } from "../../Redux/postSlice";
 
 const PostUpdateButton = ({ postID, userID, currentPost }) => {
   const dispatch = useDispatch();
-
+  const {token} = useSelector(state => state.user)
   const [open, setOpen] = useState(false);
 
   const [postText, setPostText] = useState("");
@@ -37,7 +37,7 @@ const PostUpdateButton = ({ postID, userID, currentPost }) => {
         {
           userId: userID,
           desc: postText,
-        }
+        }, { headers: { authorization: token }}
       );
 
       if (status === 200) {

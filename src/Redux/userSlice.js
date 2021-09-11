@@ -12,9 +12,9 @@ export const loginUser = createAsyncThunk("user/login", async (user) => {
 });
 
 
-export const fetchAllUsers = createAsyncThunk("user/allUsers", async (userID) => {
+export const fetchAllUsers = createAsyncThunk("user/allUsers", async ({userID, token}) => {
   const {data} = await axios.get(
-    `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${userID}/allusers`);
+    `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${userID}/allusers`, { headers: { authorization: token } })
 
   return data;
 });

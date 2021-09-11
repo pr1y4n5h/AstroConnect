@@ -6,11 +6,12 @@ import { Button } from "@material-ui/core";
 import { Add, Remove } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { follow, unfollow} from "../../Redux/userSlice";
+import { followUser, unfollowUser } from "../../API/Follow";
 
 const Rightbar = ({ user }) => {
   
   const [following, setFollowing] = useState([]);
-  const { userInfo: authUser } = useSelector((state) => state.user);
+  const { userInfo: authUser, token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isFollowed, setFollowed] = useState(user?.followers?.includes(authUser?._id));
 
@@ -18,20 +19,10 @@ const Rightbar = ({ user }) => {
   const handleFollow = async () => {
     try {
       if (isFollowed) {
-        await axios.post(
-          `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${user._id}/unfollow`,
-          {
-            userId: authUser._id,
-          }
-        );
+        await unfollowUser(user._id, authUser._id, token)
         dispatch(unfollow({ user: user._id, loggedUser: authUser._id }));
       } else {
-        await axios.post(
-          `https://AstroConnect-Backend.pr1y4n5h.repl.co/user/${user._id}/follow`,
-          {
-            userId: authUser._id,
-          }
-        );
+        await followUser(user._id, authUser._id, token)
         dispatch(follow({ user: user._id, loggedUser: authUser._id }));
       }
       setFollowed((isFollowed) => !isFollowed);
@@ -44,10 +35,10 @@ const Rightbar = ({ user }) => {
     setFollowed(user?.followers?.includes(authUser?._id));
   }, [user?._id]);
 
-  async function fetchFollowing() {
+  async function fetchUserFollowing() {
     try {
       const { data, status } = await axios.get(
-        ` https://AstroConnect-Backend.pr1y4n5h.repl.co/user/followings/${user._id}`
+        ` https://AstroConnect-Backend.pr1y4n5h.repl.co/user/followings/${user._id}`, { headers: { authorization: token } }
       );
 
       if (status === 200) {
@@ -59,7 +50,7 @@ const Rightbar = ({ user }) => {
   }
 
   useEffect(() => {
-    fetchFollowing();
+    fetchUserFollowing();
   }, [user]);
 
   const ProfileRightBar = () => {

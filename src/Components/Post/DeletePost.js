@@ -10,8 +10,13 @@ import {
 import { Delete } from "@material-ui/icons";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 
 const DeletePost = ({ postID, userID }) => {
+
+  const {token} = useSelector(state => state.user)
+
+
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -28,6 +33,7 @@ const DeletePost = ({ postID, userID }) => {
       const { data, status } = await axios.delete(
         "https://AstroConnect-Backend.pr1y4n5h.repl.co/posts/",
         {
+          headers: { authorization: token },
           data: {
             userId: userID,
             postId: postID,

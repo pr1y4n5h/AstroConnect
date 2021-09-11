@@ -68,8 +68,6 @@ const Signup = () => {
             className="mb-4 w-full"
             label="Enter your Username"
             variant="outlined"
-            error
-            helperText="Incorrect entry."
             value={user.username}
             ref={inputRef}
             required

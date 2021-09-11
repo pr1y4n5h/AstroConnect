@@ -4,8 +4,7 @@ import { FaUser, FaKey, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, setToken } from "../../Redux/userSlice";
-import { toastFailText, toastSuccessText } from "../../Components/Toast";
+import { loginUser } from "../../Redux/userSlice";
 
 const Login = () => {
   const { userInfo, pending, error, token } = useSelector(

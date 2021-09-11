@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { follow, unfollow } from "../../Redux/userSlice";
+import "./peopleCard.style.css"
 
 const PeopleCard = ({ person }) => {
   const { userInfo: authUser } = useSelector((state) => state.user);
@@ -51,7 +52,7 @@ const PeopleCard = ({ person }) => {
         <div className="profile-pic-medium">
           <span>{person?.username.charAt().toUpperCase()}</span>
         </div>
-        <Link to={`/profile/${person._id}`} className="ml-4 text-xl"> @{person?.username} </Link>
+        <Link to={`/profile/${person._id}`} className="ml-4 text-lg md:text-xl"> @{person?.username} </Link>
       </div>
       <Button onClick={handleFollow} variant="contained" color={!isFollowed ? "primary" : "default"}>
         {isFollowed ? "Unfollow" : "Follow"} {isFollowed ? (

@@ -14,7 +14,7 @@ import { PrivateRoute } from "./PrivateRoute";
 
 function App() {
   const dispatch = useDispatch();
-
+  const { userInfo, token } = useSelector((state) => state.user);
 
   useEffect(() => {
     const savedToken = JSON.parse(localStorage?.getItem("token"));
@@ -23,7 +23,9 @@ function App() {
     savedUser && dispatch(setUser(savedUser));
   }, []);
 
-
+  useEffect(() => {
+    token && dispatch(fetchAllUsers(userInfo?._id));
+  }, [token]);
 
   return (
     <div>

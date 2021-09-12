@@ -2,17 +2,17 @@ import "./Rightbar.style.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Button } from "@material-ui/core";
+import { Button, CircularProgress } from "@material-ui/core";
 import { Add, Remove } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { follow, unfollow} from "../../Redux/userSlice";
+import { follow, setLoader, unfollow} from "../../Redux/userSlice";
 import { followUser, unfollowUser } from "../../API/Follow";
 import { toastFailText, toastSuccessText } from "../Toast";
 
 const Rightbar = ({ user }) => {
   
   const [following, setFollowing] = useState([]);
-  const { userInfo: authUser, token } = useSelector((state) => state.user);
+  const { userInfo: authUser, token, loader } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isFollowed, setFollowed] = useState(user?.followers?.includes(authUser?._id));
 
@@ -39,6 +39,7 @@ const Rightbar = ({ user }) => {
   }, [user?._id]);
 
   async function fetchUserFollowing() {
+    dispatch(setLoader())
     try {
       const { data, status } = await axios.get(
         ` https://AstroConnect-Backend.pr1y4n5h.repl.co/user/followings/${user._id}`, { headers: { authorization: token } }
@@ -49,6 +50,9 @@ const Rightbar = ({ user }) => {
       }
     } catch (error) {
       console.log(error);
+    }
+    finally {
+    dispatch(setLoader())
     }
   }
 
@@ -95,9 +99,9 @@ const Rightbar = ({ user }) => {
           </div>
         </div>
 
-        <h3 className="text-lg font-bold font-sans mb-4"> Followings</h3>
+        {following?.length > 0 && <h3 className="text-lg font-bold font-sans mb-4"> Followings</h3>}
         <div className="profile-following-right-div">
-          {following.map((item) => (
+          { loader ? <div className="flex justify-center"> <CircularProgress size={25} color="secondary" /> </div> : (following.map((item) => (
             <Link key={item._id} to={`/profile/${item._id}`}>
               <div className="profile-following-right">
                 <div className="profile-pic-medium">
@@ -106,7 +110,7 @@ const Rightbar = ({ user }) => {
                 <div className="text-center">@{item.username}</div>
               </div>
             </Link>
-          ))}
+          )))}
         </div>
       </div>
     );

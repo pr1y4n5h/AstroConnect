@@ -1,10 +1,9 @@
 .login-box {
     display: flex;
     flex-direction: column;
-    /* background: var(--secondary-color); */
     box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
     width: 350px;
-    height: 450px;
+    height: 480px;
     position: absolute;
     top: 45%;
     left: 50%;

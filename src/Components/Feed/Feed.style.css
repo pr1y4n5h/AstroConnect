@@ -1,13 +1,12 @@
 .feed-container{
     flex: 5;
-    border: 1px solid black;
+    margin-bottom: 1rem;
 }
 
 
 @media all and (max-width: 768px) {
     .feed-container{
         flex: 12;
-        
     }    
   }
   

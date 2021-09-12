@@ -9,3 +9,7 @@
   width: 8px;
   background-color: black;
 }
+
+main {
+  min-height: 85vh;
+}

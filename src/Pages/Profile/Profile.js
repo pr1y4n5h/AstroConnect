@@ -35,7 +35,7 @@ const Profile = () => {
 
             <div className="profile-info">
               <h4 className="text-xl font-extrabold font-sans">
-                {profileOwner?.username}
+                @{profileOwner?.username}
               </h4>
               <span className="text-lg font-light font-sans">
                 {profileOwner?.bio}

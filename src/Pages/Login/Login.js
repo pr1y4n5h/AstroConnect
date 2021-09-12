@@ -5,27 +5,31 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../Redux/userSlice";
+import { toastSuccessText } from "../../Components/Toast";
 
 const Login = () => {
-  const { userInfo, pending, error, token } = useSelector(
-    (state) => state.user
-  );
+  const { pending, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isVisible, setVisible] = useState(false);
   const navigate = useNavigate();
-  const { state } = useLocation(); 
+  const { state } = useLocation();
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
 
- async function submitHandler(e) {
+  async function submitHandler(e) {
     e.preventDefault();
     dispatch(loginUser(credentials));
   }
 
-  if(error === false && pending === false) {
+  if (error === false && pending === false) {
     navigate(state?.from ? state.from : "/");
+  }
+
+  async function guestHandler(e) {
+    e.preventDefault();
+    dispatch(loginUser({ email: "guest@test.com", password: "test123" }));
   }
 
   return (
@@ -70,17 +74,24 @@ const Login = () => {
           </span>
         </div>
 
-        { error && <div className="mb-6 text-center"> Invalid Credentials! </div>}
+        {error && (
+          <div className="mb-6 text-center bg-red-300 h-3/4">
+            Invalid Credentials!
+          </div>
+        )}
 
         <div className="mb-6 flex justify-center ">
-        
           <Button
             type="submit"
             className="w-full"
             variant="contained"
             color="primary"
           >
-            {pending ?  <CircularProgress size={25} color="secondary" /> : "Login"}
+            {pending ? (
+              <CircularProgress size={25} color="secondary" />
+            ) : (
+              "Login"
+            )}
           </Button>
         </div>
         <h3 className="text-sm font-medium font-sans mb-3 text-center">
@@ -94,6 +105,15 @@ const Login = () => {
         >
           Create an Account
         </Button>
+        <h3 className="text-sm font-medium font-sans mb-3 text-center"> or </h3>
+          <Button
+            onClick={guestHandler}
+            className="w-full"
+            variant="outlined"
+            color="default"
+          >
+            Login as Guest
+          </Button>
       </form>
     </div>
   );

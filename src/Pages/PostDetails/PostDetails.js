@@ -64,7 +64,7 @@ const PostDetails = () => {
         <Sidebar />
         <div className="post-details">
           {status.loading ? (
-            <div className="loader">
+            <div className="flex justify-center items-center w-full h-80">
               <CircularProgress size={60} thickness={4} color="secondary" />
             </div>
           ) : (
@@ -83,7 +83,7 @@ const PostDetails = () => {
                       <h3 className="text-xl font-semibold font-sans md:text-2xl text-black mt-4 md:mt-2">
                         @{currentUser?.username}
                       </h3>
-                      <div className="text-gray-600	text-sm md:text-base">
+                      <div className="text-gray-600	text-xs md:text-base">
                         <i class="fas fa-clipboard mr-3"></i>
                         {processJoinedDate(currentPost?.createdAt)}
                       </div>

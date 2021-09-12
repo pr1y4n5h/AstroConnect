@@ -12,6 +12,7 @@ import { Edit } from "@material-ui/icons";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCurrentPost } from "../../Redux/postSlice";
+import { toastSuccessText } from "../Toast";
 
 const PostUpdateButton = ({ postID, userID, currentPost }) => {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ const PostUpdateButton = ({ postID, userID, currentPost }) => {
 
       if (status === 200) {
         dispatch(updateCurrentPost(postText));
+        toastSuccessText("Post updated!")
         setOpen(false);
       }
     } catch (error) {

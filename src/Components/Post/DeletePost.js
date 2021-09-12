@@ -11,11 +11,11 @@ import { Delete } from "@material-ui/icons";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
+import { toastFailText } from "../Toast";
 
 const DeletePost = ({ postID, userID }) => {
 
   const {token} = useSelector(state => state.user)
-
 
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
@@ -43,7 +43,8 @@ const DeletePost = ({ postID, userID }) => {
 
       if (status === 200) {
         setOpen(false);
-        navigate(`/profile/${userID}`);
+        toastFailText("Post deleted!")
+        navigate("/");
       }
     } catch (err) {
       console.log("Error is", err);

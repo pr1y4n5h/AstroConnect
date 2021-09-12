@@ -105,9 +105,6 @@ export const postSlice = createSlice({
       state.currentPost = { ...state.currentPost, desc: action.payload };
     },
 
-    setLoader: (state) => {
-      state.loader = !state.loader;
-    },
   },
 
   extraReducers: {
@@ -165,12 +162,9 @@ export const postSlice = createSlice({
 
 export const {
   flushPosts,
-  sharePost,
   addToLikes,
   removeFromLikes,
-  updatePosts,
   updateCurrentPost,
-  setLoader,
   unlikeCurrentPost,
   likeCurrentPost
 } = postSlice.actions;

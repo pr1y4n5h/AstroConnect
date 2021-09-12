@@ -14,8 +14,8 @@ import axios from "axios";
 
 const Share = ({user}) => {
 
-  const {userInfo: authUser} = useSelector(state => state.user);
-  const {posts , pending} = useSelector(state => state.post)
+  const {userInfo: authUser, token} = useSelector(state => state.user);
+  const {pending} = useSelector(state => state.post)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
@@ -23,6 +23,7 @@ const Share = ({user}) => {
   const [file, setFile] = useState(null);
 
   const shareHandle = async (e) => {
+
     e.preventDefault();
     const newPost = {
       userId: authUser._id, 
@@ -34,7 +35,6 @@ const Share = ({user}) => {
       data.append("file", file);
       data.append("name", filename);
       newPost.img = filename;
-      console.log(newPost);
       try {
         await axios.post(
           "https://AstroConnect-Backend.pr1y4n5h.repl.co/upload",
@@ -44,7 +44,7 @@ const Share = ({user}) => {
           console.log(err);
         }
       }
-    dispatch(createNewPost(newPost))
+    dispatch(createNewPost({newPost: newPost, token: token}))
     setText("")
     setFile(null)
   };

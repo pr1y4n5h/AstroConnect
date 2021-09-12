@@ -7,6 +7,7 @@ import { Add, Remove } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { follow, unfollow} from "../../Redux/userSlice";
 import { followUser, unfollowUser } from "../../API/Follow";
+import { toastFailText, toastSuccessText } from "../Toast";
 
 const Rightbar = ({ user }) => {
   
@@ -21,9 +22,11 @@ const Rightbar = ({ user }) => {
       if (isFollowed) {
         await unfollowUser(user._id, authUser._id, token)
         dispatch(unfollow({ user: user._id, loggedUser: authUser._id }));
+        toastFailText(`You unfollowed @${user?.username} !`)
       } else {
         await followUser(user._id, authUser._id, token)
         dispatch(follow({ user: user._id, loggedUser: authUser._id }));
+        toastSuccessText(`You started following @${user?.username} !`)
       }
       setFollowed((isFollowed) => !isFollowed);
     } catch (error) {
@@ -55,7 +58,7 @@ const Rightbar = ({ user }) => {
 
   const ProfileRightBar = () => {
     return (
-      <>
+      <div className="rightbar">
         {user._id !== authUser._id && (
           <div className="mb-8">
           <Button variant="contained" color="primary" onClick={handleFollow}>
@@ -105,17 +108,13 @@ const Rightbar = ({ user }) => {
             </Link>
           ))}
         </div>
-      </>
+      </div>
     );
-  };
-
-  const HomeRightBar = () => {
-    return <></>;
   };
 
   return (
     <div className="rightbar-container">
-      {user ? <ProfileRightBar /> : <HomeRightBar /> }
+      {user && <ProfileRightBar />}
     </div>
   );
 };

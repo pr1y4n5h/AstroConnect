@@ -8,9 +8,10 @@ import { Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
 import Home from "./Pages/Home/Home";
 import { fetchAllUsers, setToken, setUser } from "./Redux/userSlice";
-import PostDetails from "./Pages/Post/PostDetails";
+import PostDetails from "./Pages/PostDetails/PostDetails";
 import People from "./Pages/People/People";
 import { PrivateRoute } from "./PrivateRoute";
+
 
 function App() {
   const dispatch = useDispatch();

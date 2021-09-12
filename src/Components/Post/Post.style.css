@@ -29,10 +29,30 @@
   border: 2px solid #c0c0c0;
 }
 
+.image-div {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.image {
+  width: 100%;
+  display: block;
+  object-fit: contain;
+  height: 400px;
+}
 
 @media all and (max-width: 768px) {
   .post-card {
     width: 100%;
     padding: 0.5rem 0.5rem;
   }
+
+  .image {
+  width: 100%;
+  object-fit: contain;
+  height: 350px;
+}
 }

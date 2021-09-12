@@ -46,12 +46,14 @@ const Post = ({ post }) => {
 
         <div className="mt-4 ml-2">
           <div> {desc} </div>
+          <div className="image-div">
           {img && (
             <img
-              className="mt-6"
+              className="image"
               src={`https://astroconnect-backend.pr1y4n5h.repl.co/${img}`}
             />
           )}
+          </div>
         </div>
         <div className="flex justify-between items-center mt-4">
           <div>

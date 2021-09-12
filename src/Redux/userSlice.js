@@ -2,13 +2,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const loginUser = createAsyncThunk("user/login", async (user) => {
-  const res = await axios.post(
+  const {data} = await axios.post(
     `
     https://astroconnect-backend.pr1y4n5h.repl.co/auth/login
     `,
     user
   );
-  return res.data;
+  return data;
 });
 
 
@@ -20,8 +20,6 @@ export const fetchAllUsers = createAsyncThunk("user/allUsers", async ({userID, t
 });
 
 
-
-
 export const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -30,9 +28,11 @@ export const userSlice = createSlice({
     token: null || JSON.parse(localStorage?.getItem("token")),
     status: {
       userLoggedIn: false,
+      userRejected: false
     },
+    loader: false,
     pending: null,
-    error: null,
+    error: null
   },
 
   reducers: {
@@ -43,10 +43,15 @@ export const userSlice = createSlice({
     setUser: (state, action) => {
       state.userInfo = action.payload;
     },
+
+    setLoader: (state) => {
+      state.loader = !state.loader
+    },
     
     logOutUser: (state) => {
       localStorage?.removeItem("user");
       localStorage?.removeItem("token");
+      state.status.userLoggedIn = false;
       state.userInfo = null;
       state.token = null;
       state.allUsers = null
@@ -78,6 +83,7 @@ export const userSlice = createSlice({
       state.pending = false;
       state.error = false;
       state.status.userLoggedIn = true;
+      state.status.userRejected = false;
       state.userInfo = action.payload.user;
       state.token = action.payload.token;
       localStorage.setItem("token", JSON.stringify(state.token));
@@ -87,8 +93,9 @@ export const userSlice = createSlice({
     [loginUser.rejected]: (state) => {
       state.pending = null;
       state.error = true;
+      state.status.userRejected = true;
+      state.status.userLoggedIn = false;
     },
-
 
     [fetchAllUsers.pending]: (state) => {
       state.pending = true;
@@ -103,6 +110,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { follow, unfollow, setToken, setUser, logOutUser, resetError } =
+export const { follow, unfollow, setToken, setUser, logOutUser, resetError , setLoader} =
   userSlice.actions;
 export default userSlice.reducer;

@@ -1,14 +1,14 @@
 import { TextField, Button, CircularProgress } from "@material-ui/core";
 import "./Login.style.css";
 import { FaUser, FaKey, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../Redux/userSlice";
-import { toastSuccessText } from "../../Components/Toast";
+import {toastSuccessText, toastFailText} from "../../Components/Toast"
 
 const Login = () => {
-  const { pending, error } = useSelector((state) => state.user);
+  const { pending, error, status } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isVisible, setVisible] = useState(false);
   const navigate = useNavigate();
@@ -23,9 +23,16 @@ const Login = () => {
     dispatch(loginUser(credentials));
   }
 
-  if (error === false && pending === false) {
-    navigate(state?.from ? state.from : "/");
-  }
+  useEffect(() => {
+    if(status.userLoggedIn && !pending && !status.userRejected) {
+      navigate(state?.from ? state.from : "/");
+      toastSuccessText("User logged in successfully!")
+    }
+    if(!status.userLoggedIn && error && status.userRejected) {
+      toastFailText("Invalid credentials!")
+    }
+  },[status.userLoggedIn, error])
+
 
   async function guestHandler(e) {
     e.preventDefault();
@@ -34,7 +41,7 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <form className="login-box" onSubmit={submitHandler}>
+      <form className="login-box">
         <h1 className="text-3xl font-extrabold font-sans mb-6 text-center">
           Login
         </h1>
@@ -74,18 +81,13 @@ const Login = () => {
           </span>
         </div>
 
-        {error && (
-          <div className="mb-6 text-center bg-red-300 h-3/4">
-            Invalid Credentials!
-          </div>
-        )}
-
         <div className="mb-6 flex justify-center ">
           <Button
             type="submit"
             className="w-full"
             variant="contained"
             color="primary"
+            onClick={submitHandler}
           >
             {pending ? (
               <CircularProgress size={25} color="secondary" />

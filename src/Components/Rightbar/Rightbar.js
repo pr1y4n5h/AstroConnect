@@ -60,7 +60,7 @@ const Rightbar = ({ user }) => {
     return (
       <div className="rightbar">
         {user._id !== authUser._id && (
-          <div className="mb-8">
+          <div className="mb-8 text-center md:text-left mr-4 md:mr-2">
           <Button variant="contained" color="primary" onClick={handleFollow}>
             {isFollowed ? "Unfollow" : "Follow"}
             {isFollowed ? (

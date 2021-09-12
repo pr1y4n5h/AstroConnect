@@ -102,12 +102,15 @@ const PostDetails = () => {
                 <div className="px-4 py-4">
                   <div>
                     <p> {currentPost?.desc} </p>
+                    <div className="details-img-div">
+
                     {img && (
                       <img
-                        className="mt-6"
+                        className="details-img"
                         src={`https://astroconnect-backend.pr1y4n5h.repl.co/${img}`}
                       />
                     )}
+                    </div>
                   </div>
                   <div className="flex justify-between">
                   <div>
@@ -134,7 +137,7 @@ const PostDetails = () => {
                     </span>
                   </div>
                   </div>
-                  <Link to="/" className="mt-6 text-xs md:text-sm hover:underline" > <span> Back to Feed </span> </Link>
+                  <Link to="/" className="mt-7 md:mt-6 text-xs md:text-sm hover:underline" > <span> Back to Feed </span> </Link>
                   </div>
                 </div>
               </div>

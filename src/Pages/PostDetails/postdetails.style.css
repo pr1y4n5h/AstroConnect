@@ -19,6 +19,18 @@
   border: 2px solid #c0c0c0;
 }
 
+.details-img-div {
+  width: 100%;
+  height: auto;
+  margin-top: 1rem;
+}
+
+.details-img {
+  width: 100%;
+  height: auto;
+}
+
+
 @media screen and (max-width: 768px) {
   .post-details-card {
     width: 100%;
